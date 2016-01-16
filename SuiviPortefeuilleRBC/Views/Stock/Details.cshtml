@@ -1,0 +1,58 @@
+﻿@model SuiviPortefeuilleRBC.Models.Stock
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Stock</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfShares)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfShares)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InvestedValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InvestedValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UnitaryPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UnitaryPrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DividendYield)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DividendYield)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Return)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Return)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.StockId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

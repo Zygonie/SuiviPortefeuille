@@ -1,0 +1,63 @@
+﻿@model IEnumerable<SuiviPortefeuilleRBC.Models.Operation>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Sens)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberOfShares)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fees)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sens)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfShares)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fees)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.OperationId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.OperationId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.OperationId })
+        </td>
+    </tr>
+}
+
+</table>

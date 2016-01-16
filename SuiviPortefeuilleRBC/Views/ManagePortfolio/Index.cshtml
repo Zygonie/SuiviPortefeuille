@@ -1,0 +1,69 @@
+﻿@model IEnumerable< SuiviPortefeuilleRBC.Models.ManagePortfolioViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Manage Portfolio</h2>
+
+<p>
+    @Html.ActionLink("Add new operation","CreateOperation")
+</p>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumberOfShare)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pru)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DailyVariation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PerformanceCash)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PerformancePercent)
+            </th>
+        </tr>
+
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberOfShare)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pru)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DailyVariation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PerformanceCash)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PerformancePercent)
+                </td>
+            </tr>
+        }
+
+    </table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

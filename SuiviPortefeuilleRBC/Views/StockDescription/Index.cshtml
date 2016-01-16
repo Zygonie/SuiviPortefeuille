@@ -1,0 +1,159 @@
+﻿@model IEnumerable<SuiviPortefeuilleRBC.Models.StockDescription>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangePercent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SpreadLowTargetPercent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SpreadHighTargetPercent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PriceTargetMin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PriceTargetMax)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DividendYield)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Payout)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PriceEarningRatio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DividendPerShare)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EarningsPerShare)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EpsEstimateCurrentYear)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PriceToBook)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExDividendDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BookToValuePerShare)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GrahamPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GrahamSpread)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PtfPercent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberOfSharesTarget)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AmountTarget)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangePercent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SpreadLowTargetPercent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SpreadHighTargetPercent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PriceTargetMin)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PriceTargetMax)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DividendYield)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Payout)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PriceEarningRatio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DividendPerShare)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EarningsPerShare)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EpsEstimateCurrentYear)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PriceToBook)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExDividendDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BookToValuePerShare)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GrahamPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GrahamSpread)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PtfPercent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfSharesTarget)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AmountTarget)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.StockDescriptionId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.StockDescriptionId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.StockDescriptionId })
+        </td>
+    </tr>
+}
+
+</table>

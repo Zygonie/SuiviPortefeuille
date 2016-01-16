@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SuiviPortefeuilleRBC.Models.Stock>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberOfShares)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InvestedValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnitaryPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DividendYield)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Return)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfShares)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InvestedValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitaryPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DividendYield)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Return)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.StockId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.StockId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.StockId })
+        </td>
+    </tr>
+}
+
+</table>

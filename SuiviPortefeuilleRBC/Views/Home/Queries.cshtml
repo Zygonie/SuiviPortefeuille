@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Queries";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    IEnumerable<SuiviPortefeuilleRBC.Models.SimpleQuoteQueryResultModel> quote = ViewData["quote"] as IEnumerable<SuiviPortefeuilleRBC.Models.SimpleQuoteQueryResultModel>;
+    IEnumerable<SuiviPortefeuilleRBC.Models.DetailedQuoteQueryResultModel> detailedQuote = ViewData["detailedQuote"] as IEnumerable<SuiviPortefeuilleRBC.Models.DetailedQuoteQueryResultModel>;
+}
+
+<h2>Queries</h2>
+
+<table class="table">
+    <tr>
+        <th>Symbol</th>
+        <th>LastTradePriceOnly</th>
+        <th>Volume</th>
+    </tr>
+
+    @foreach(var item in quote)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Symbol)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastTradePriceOnly)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Volume)
+            </td>
+        </tr>
+    }
+</table>
+<ul>
+    @foreach(var item in detailedQuote)
+    {
+        <li>Symbol: <span>@Html.DisplayFor(modelItem => item.Symbol)</span></li>
+        <li>Bid: <span>@Html.DisplayFor(modelItem => item.Bid)</span></li>
+        <li>Ask: <span>@Html.DisplayFor(modelItem => item.Ask)</span></li>
+        <li>Name: <span>@Html.DisplayFor(modelItem => item.Name)</span></li>
+        <li>ChangeinPercent: <span>@Html.DisplayFor(modelItem => item.ChangeinPercent)</span></li>
+        <li>LastTradePriceOnly: <span>@Html.DisplayFor(modelItem => item.LastTradePriceOnly)</span></li>
+    }
+</ul>

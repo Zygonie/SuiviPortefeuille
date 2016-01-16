@@ -1,0 +1,40 @@
+﻿****************************************************************************************************
+***                     How to re-create database for Entity Framework?                          ***
+*** (http://stackoverflow.com/questions/20304058/how-to-re-create-database-for-entity-framework) ***
+****************************************************************************************************
+Follow below steps:
+
+1) First go to Server Explorer in Visual Studio, check if the ".mdf" Data Connections for this project are connected, if so, right click and delete.
+
+2 )Go to Solution Explorer, click show All Files icon.
+
+3) Go to App_Data, right click and delete all ".mdf" files for this project.
+
+4) Delete Migrations folder by right click and delete.
+
+5) Go to SQL Server Management Studio, make sure the DB for this project is not there, otherwise delete it.
+
+6) Go to Package Manager Console in Visual Studio
+	1.input "Enable-Migrations"
+	2.input "Add-Migration init"
+	3.input "Update-Database"
+
+7) Run your application
+
+Note: In step 6 part 3, if you get an error "Cannot attach the file...", it is possibly because you didn't delete the database files completely in SQL Server. 
+
+UPDATE 11/12/14 - I use this all the time when I make a breaking db change. I found this is a great way to roll back your migrations to the original db:
+•Puts the db back to original 
+•Run the normal migration to put it back to current
+	1.Update-Database -TargetMigration:0 -force [This will destroy all tables and all data.] 
+	2.Update-Database -force [use force if necessary]
+
+****************************************************************************************************
+***                   EF5: Cannot attach the file ‘{0}' as database '{1}'                        ***
+*** http://stackoverflow.com/questions/13275054/ef5-cannot-attach-the-file-0-as-database-1?lq=1  ***
+****************************************************************************************************
+If you delete the DB file, it still stays registered with SqlLocalDB. Sometimes it fixes it to delete the DB. You can do this from the command line.
+1.Open the "Developer Command Propmpt for VisualStudio" under your start/programs menu.
+2.Run the following commands:
+	sqllocaldb.exe stop v11.0
+	sqllocaldb.exe delete v11.0
