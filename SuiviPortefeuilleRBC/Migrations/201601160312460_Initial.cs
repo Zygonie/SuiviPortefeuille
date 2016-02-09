@@ -18,22 +18,21 @@ namespace SuiviPortefeuilleRBC.Migrations
                         Price = c.Double(nullable: false),
                         Amount = c.Double(nullable: false),
                         Date = c.DateTime(),
-                        Stock_StockDescriptionId = c.Int(nullable: false),
+                        Stock_Code = c.String(nullable: false, maxLength: 128),
                         Portfolio_PortfolioId = c.Int(),
                     })
                 .PrimaryKey(t => t.OperationId)
-                .ForeignKey("dbo.StockDescriptions", t => t.Stock_StockDescriptionId, cascadeDelete: true)
+                .ForeignKey("dbo.StockDescriptions", t => t.Stock_Code, cascadeDelete: true)
                 .ForeignKey("dbo.Portfolios", t => t.Portfolio_PortfolioId)
-                .Index(t => t.Stock_StockDescriptionId)
+                .Index(t => t.Stock_Code)
                 .Index(t => t.Portfolio_PortfolioId);
             
             CreateTable(
                 "dbo.StockDescriptions",
                 c => new
                     {
-                        StockDescriptionId = c.Int(nullable: false, identity: true),
+                        Code = c.String(nullable: false, maxLength: 128),
                         Name = c.String(nullable: false),
-                        Code = c.String(nullable: false),
                         LastPrice = c.Double(nullable: false),
                         ChangePercent = c.Double(nullable: false),
                         SpreadLowTargetPercent = c.Double(nullable: false),
@@ -56,7 +55,7 @@ namespace SuiviPortefeuilleRBC.Migrations
                         NumberOfSharesTarget = c.Int(nullable: false),
                         AmountTarget = c.Double(nullable: false),
                     })
-                .PrimaryKey(t => t.StockDescriptionId);
+                .PrimaryKey(t => t.Code);
             
             CreateTable(
                 "dbo.Portfolios",
@@ -75,19 +74,19 @@ namespace SuiviPortefeuilleRBC.Migrations
                 c => new
                     {
                         StockId = c.Int(nullable: false, identity: true),
-                        StockDescriptionId = c.Int(nullable: false),
+                        Code = c.String(nullable: false, maxLength: 128),
+                        PortfolioId = c.Int(nullable: false),
                         NumberOfShares = c.Int(nullable: false),
                         InvestedValue = c.Double(nullable: false),
                         UnitaryPrice = c.Double(nullable: false),
-                        DividendYield = c.Double(nullable: false),
-                        Return = c.Double(nullable: false),
-                        Portfolio_PortfolioId = c.Int(),
+                        PerformanceCash = c.Double(nullable: false),
+                        PerformancePercent = c.Double(nullable: false),
                     })
-                .PrimaryKey(t => t.StockId)
-                .ForeignKey("dbo.StockDescriptions", t => t.StockDescriptionId, cascadeDelete: true)
-                .ForeignKey("dbo.Portfolios", t => t.Portfolio_PortfolioId)
-                .Index(t => t.StockDescriptionId)
-                .Index(t => t.Portfolio_PortfolioId);
+                .PrimaryKey(t => new { t.StockId, t.Code, t.PortfolioId })
+                .ForeignKey("dbo.StockDescriptions", t => t.Code, cascadeDelete: true)
+                .ForeignKey("dbo.Portfolios", t => t.PortfolioId, cascadeDelete: true)
+                .Index(t => t.Code)
+                .Index(t => t.PortfolioId);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -165,20 +164,20 @@ namespace SuiviPortefeuilleRBC.Migrations
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Stocks", "Portfolio_PortfolioId", "dbo.Portfolios");
-            DropForeignKey("dbo.Stocks", "StockDescriptionId", "dbo.StockDescriptions");
+            DropForeignKey("dbo.Stocks", "PortfolioId", "dbo.Portfolios");
+            DropForeignKey("dbo.Stocks", "Code", "dbo.StockDescriptions");
             DropForeignKey("dbo.Operations", "Portfolio_PortfolioId", "dbo.Portfolios");
-            DropForeignKey("dbo.Operations", "Stock_StockDescriptionId", "dbo.StockDescriptions");
+            DropForeignKey("dbo.Operations", "Stock_Code", "dbo.StockDescriptions");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.Stocks", new[] { "Portfolio_PortfolioId" });
-            DropIndex("dbo.Stocks", new[] { "StockDescriptionId" });
+            DropIndex("dbo.Stocks", new[] { "PortfolioId" });
+            DropIndex("dbo.Stocks", new[] { "Code" });
             DropIndex("dbo.Operations", new[] { "Portfolio_PortfolioId" });
-            DropIndex("dbo.Operations", new[] { "Stock_StockDescriptionId" });
+            DropIndex("dbo.Operations", new[] { "Stock_Code" });
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");

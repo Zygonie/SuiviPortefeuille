@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Index</h2>
@@ -12,6 +13,9 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.Description.Name)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.NumberOfShares)
         </th>
         <th>
@@ -21,16 +25,19 @@
             @Html.DisplayNameFor(model => model.UnitaryPrice)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DividendYield)
+            @Html.DisplayNameFor(model => model.PerformanceCash)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Return)
+            @Html.DisplayNameFor(model => model.PerformancePercent)
         </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description.Name)
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.NumberOfShares)
         </td>
@@ -41,10 +48,10 @@
             @Html.DisplayFor(modelItem => item.UnitaryPrice)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.DividendYield)
+            @Html.DisplayFor(modelItem => item.PerformanceCash)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Return)
+            @Html.DisplayFor(modelItem => item.PerformancePercent)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.StockId }) |

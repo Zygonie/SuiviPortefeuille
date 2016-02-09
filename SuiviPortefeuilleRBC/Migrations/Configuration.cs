@@ -74,12 +74,27 @@ namespace SuiviPortefeuilleRBC.Migrations
             descriptions.ForEach(s => context.StockDescriptions.AddOrUpdate(p => p.Name, s));
             context.SaveChanges();
 
-            var stockRY = context.StockDescriptions.First(p => p.Code == "RY.TO");
-            var stockNA = context.StockDescriptions.First(p => p.Code == "NA.TO");
+            var descriptionRY = context.StockDescriptions.First(p => p.Code == "RY.TO");
+            var descriptionNA = context.StockDescriptions.First(p => p.Code == "NA.TO");
+            var ptf = context.Portfolios.First(p => p.Name == "MargeRBC");
 
-            context.Stocks.AddOrUpdate(p => p.StockId,
-               new Stock { StockDescriptionId = stockRY.StockDescriptionId, NumberOfShares = 10, UnitaryPrice = 11, InvestedValue = 119.95 },
-               new Stock { StockDescriptionId = stockNA.StockDescriptionId, NumberOfShares = 20, UnitaryPrice = 12, InvestedValue = 249.95 });
+            var stockRY = new Stock();
+            stockRY.Code = descriptionRY.Code;
+            stockRY.PortfolioId = ptf.PortfolioId;
+            stockRY.NumberOfShares = 10;
+            stockRY.InvestedValue = 500;
+            stockRY.UnitaryPrice = 50;
+
+            var stockNA = new Stock();
+            stockNA.Code = descriptionNA.Code;
+            stockNA.PortfolioId = ptf.PortfolioId;
+            stockNA.NumberOfShares = 10;
+            stockNA.InvestedValue = 500;
+            stockNA.UnitaryPrice = 50;
+
+            context.Stocks.AddOrUpdate(p => p.StockId, new Stock[] { stockRY, stockNA });
+
+            context.SaveChanges();
          }
          catch(System.Data.Entity.Validation.DbEntityValidationException ex)
          {

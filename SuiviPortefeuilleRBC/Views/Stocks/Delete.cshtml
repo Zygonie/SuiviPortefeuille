@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Delete</h2>
@@ -11,6 +12,14 @@
     <h4>Stock</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Description.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description.Name)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.NumberOfShares)
         </dt>
@@ -36,19 +45,19 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DividendYield)
+            @Html.DisplayNameFor(model => model.PerformanceCash)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DividendYield)
+            @Html.DisplayFor(model => model.PerformanceCash)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Return)
+            @Html.DisplayNameFor(model => model.PerformancePercent)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Return)
+            @Html.DisplayFor(model => model.PerformancePercent)
         </dd>
 
     </dl>

@@ -204,15 +204,16 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\PortfolioApiController.cs" />
+    <Compile Include="Controllers\API\PortfolioController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManagePortfolioController.cs" />
     <Compile Include="Controllers\OperationController.cs" />
     <Compile Include="Controllers\PortfolioController.cs" />
-    <Compile Include="Controllers\StockController.cs" />
+    <Compile Include="Controllers\API\SimpleInfosStockController.cs" />
     <Compile Include="Controllers\StockDescriptionController.cs" />
-    <Compile Include="Controllers\StocksApiController.cs" />
+    <Compile Include="Controllers\API\DetailedInfosStocksController.cs" />
+    <Compile Include="Controllers\StocksController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -222,6 +223,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AddOperationViewModel.cs" />
     <Compile Include="Models\CashOperationApiModel.cs" />
     <Compile Include="Models\DetailedQuoteQueryResultModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -1071,6 +1073,8 @@
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -1120,11 +1124,6 @@
     <Content Include="Views\Portfolio\Details.cshtml" />
     <Content Include="Views\Portfolio\Edit.cshtml" />
     <Content Include="Views\Portfolio\Index.cshtml" />
-    <Content Include="Views\Stock\Create.cshtml" />
-    <Content Include="Views\Stock\Delete.cshtml" />
-    <Content Include="Views\Stock\Details.cshtml" />
-    <Content Include="Views\Stock\Edit.cshtml" />
-    <Content Include="Views\Stock\Index.cshtml" />
     <Content Include="Views\StockDescription\Create.cshtml" />
     <Content Include="Views\StockDescription\Delete.cshtml" />
     <Content Include="Views\StockDescription\Details.cshtml" />
@@ -1136,8 +1135,15 @@
     <Content Include="Views\Operation\Edit.cshtml" />
     <Content Include="Views\Operation\Index.cshtml" />
     <Content Include="Scripts\version.json" />
-    <Content Include="Views\Home\Queries.cshtml" />
     <Content Include="Views\ManagePortfolio\Index.cshtml" />
+    <Content Include="Views\Home\ManagePortfolio.cshtml" />
+    <Content Include="Views\Stocks\Create.cshtml" />
+    <Content Include="Views\Stocks\Delete.cshtml" />
+    <Content Include="Views\Stocks\Details.cshtml" />
+    <Content Include="Views\Stocks\Edit.cshtml" />
+    <Content Include="Views\Stocks\Index.cshtml" />
+    <Content Include="Views\ManagePortfolio\AddOperation.cshtml" />
+    <Content Include="Views\ManagePortfolio\StockListPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -10,17 +10,18 @@ using SuiviPortefeuilleRBC.Models;
 
 namespace SuiviPortefeuilleRBC.Controllers
 {
-    public class StockController : Controller
+    public class StocksController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Stock
+        // GET: Stocks
         public ActionResult Index()
         {
-            return View(db.Stocks.ToList());
+            var stocks = db.Stocks.Include(s => s.Description);
+            return View(stocks.ToList());
         }
 
-        // GET: Stock/Details/5
+        // GET: Stocks/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -35,20 +36,19 @@ namespace SuiviPortefeuilleRBC.Controllers
             return View(stock);
         }
 
-        // GET: Stock/Create
-       [Authorize(Roles = "canEdit")]
+        // GET: Stocks/Create
         public ActionResult Create()
         {
+            ViewBag.StockDescriptionId = new SelectList(db.StockDescriptions, "StockDescriptionId", "Name");
             return View();
         }
 
-        // POST: Stock/Create
+        // POST: Stocks/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "canEdit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "StockId,NumberOfShares,InvestedValue,UnitaryPrice,DividendYield,Return")] Stock stock)
+        public ActionResult Create([Bind(Include = "StockId,StockDescriptionId,NumberOfShares,InvestedValue,UnitaryPrice,PerformanceCash,PerformancePercent")] Stock stock)
         {
             if (ModelState.IsValid)
             {
@@ -57,11 +57,11 @@ namespace SuiviPortefeuilleRBC.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.Code = new SelectList(db.StockDescriptions, "Code", "Name", stock.Code);
             return View(stock);
         }
 
-        // GET: Stock/Edit/5
-       [Authorize(Roles = "canEdit")]
+        // GET: Stocks/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -73,16 +73,16 @@ namespace SuiviPortefeuilleRBC.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Code = new SelectList(db.StockDescriptions, "Code", "Name", stock.Code);
             return View(stock);
         }
 
-        // POST: Stock/Edit/5
+        // POST: Stocks/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "canEdit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "StockId,NumberOfShares,InvestedValue,UnitaryPrice,DividendYield,Return")] Stock stock)
+        public ActionResult Edit([Bind(Include = "StockId,StockDescriptionId,NumberOfShares,InvestedValue,UnitaryPrice,PerformanceCash,PerformancePercent")] Stock stock)
         {
             if (ModelState.IsValid)
             {
@@ -90,11 +90,11 @@ namespace SuiviPortefeuilleRBC.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.Code = new SelectList(db.StockDescriptions, "Code", "Name", stock.Code);
             return View(stock);
         }
 
-        // GET: Stock/Delete/5
-       [Authorize(Roles = "canEdit")]
+        // GET: Stocks/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -109,9 +109,8 @@ namespace SuiviPortefeuilleRBC.Controllers
             return View(stock);
         }
 
-        // POST: Stock/Delete/5
+        // POST: Stocks/Delete/5
         [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "canEdit")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {

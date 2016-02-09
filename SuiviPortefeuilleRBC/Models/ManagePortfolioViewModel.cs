@@ -7,12 +7,7 @@ namespace SuiviPortefeuilleRBC.Models
 {
    public class ManagePortfolioViewModel
    {
-      public string Code { get; set; }
-      public string Name { get; set; }
-      public int NumberOfShare { get; set; }
-      public double Pru { get; set; }
-      public double DailyVariation { get; set; }
-      public double PerformanceCash { get; set; }
-      public double PerformancePercent { get; set; }
+      public List<int> PortfolioIds { get; set; }
+      public int CurrentPortfolioId { get; set; }
    }
 }

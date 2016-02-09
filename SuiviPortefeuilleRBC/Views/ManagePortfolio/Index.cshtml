@@ -1,4 +1,5 @@
-﻿@model IEnumerable< SuiviPortefeuilleRBC.Models.ManagePortfolioViewModel>
+﻿@model SuiviPortefeuilleRBC.Models.ManagePortfolioViewModel
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,64 +7,73 @@
 
 <h2>Manage Portfolio</h2>
 
-<p>
-    @Html.ActionLink("Add new operation","CreateOperation")
-</p>
+@using(Ajax.BeginForm("StockList",
+    "ManagePortfolio",
+    null,
+    new AjaxOptions() { UpdateTargetId = "stockList" },
+    new { id = "PtfIdsajaxForm" }))
+{
+    @Html.DropDownListFor(m => m.CurrentPortfolioId,
+    new SelectList(Model.PortfolioIds),
+    new { onchange = "changePortfolioId()" })
+}
 
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfShare)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Pru)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DailyVariation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PerformanceCash)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PerformancePercent)
-            </th>
-        </tr>
+<button id="btnAddLine" class="btn btn-default" data-toggle="modal" data-target="#newOperation">Add Operation</button>
+<div id="stockList">
+    @Html.Action("StockList", "ManagePortfolio", new { currentPortfolioId = Model.CurrentPortfolioId })
+</div>
 
-        @foreach(var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Code)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumberOfShare)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Pru)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DailyVariation)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PerformanceCash)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PerformancePercent)
-                </td>
-            </tr>
-        }
-
-    </table>
+<div id="newOperation" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="myModalContent"></div>
+    </div>
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var url = '@Url.Action("DisplayAddOperation", "ManagePortfolio", new { currentPortfolioId = Model.CurrentPortfolioId })';
+        $('#btnAddLine').click(function () {
+            $('#myModalContent').load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    var msg = "Sorry but there was an error: ";
+                    $("#error").html(msg + xhr.status + " " + xhr.statusText);
+                }
+                else {
+                    $('#newOperation').modal('show');
+                }
+            });
+        })
+
+        $("button[value='buysell']").click(function () {
+            var url = $(this).data("url");
+            $('#myModalContent').load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    var msg = "Sorry but there was an error: ";
+                    $("#error").html(msg + xhr.status + " " + xhr.statusText);
+                }
+                else {
+                    $('#newOperation').modal('show');
+                }
+            });
+        });
+
+        var onSubmitSuccess = function (result) {
+            $('#newOperation').modal('hide');
+            if (typeof result.success != 'undefined') {
+                if (!result.success) {
+                    alert('Operation could not be added');
+                } else {
+                    alert('Impossible!');
+                }
+            }
+            else {
+                alert('Operation has been added');
+            }
+        };
+
+        var changePortfolioId = function () {
+            $("#PtfIdsajaxForm").submit();
+        };
+    </script>
 }

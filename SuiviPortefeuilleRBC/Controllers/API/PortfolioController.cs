@@ -40,21 +40,28 @@ namespace SuiviPortefeuilleRBC.Controllers
       }
 
 
-      [HttpPost]
-      [Authorize(Roles = "canEdit")]
-      public HttpResponseMessage Post([FromUri] Operation operation)
+      //[HttpPost]
+      //[Authorize(Roles = "canEdit")]
+      //public HttpResponseMessage Post([FromUri] Operation operation)
+      //{
+      //   if(ModelState.IsValid)
+      //   {
+      //      db.Operations.Add(operation);
+      //      db.SaveChanges();
+      //      HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, operation);
+      //      return response;
+      //   }
+      //   HttpResponseMessage badResponse = Request.CreateResponse(HttpStatusCode.NotAcceptable);
+      //   return badResponse;
+      //}
+
+      protected override void Dispose(bool disposing)
       {
-         if(ModelState.IsValid)
+         if(disposing)
          {
-            db.Operations.Add(operation);
-            db.SaveChanges();
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, operation);
-            return response;
+            db.Dispose();
          }
-         HttpResponseMessage badResponse = Request.CreateResponse(HttpStatusCode.NotAcceptable);
-         return badResponse;
+         base.Dispose(disposing);
       }
-
-
    }
 }

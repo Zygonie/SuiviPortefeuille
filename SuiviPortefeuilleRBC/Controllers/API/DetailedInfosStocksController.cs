@@ -10,20 +10,40 @@ using SuiviPortefeuilleRBC.Models;
 
 namespace SuiviPortefeuilleRBC.Controllers
 {
-   public class StocksApiController : ApiController
+   public class DetailedInfosStocksController : ApiController
    {
+      #region Fields
+
       private ApplicationDbContext db = new ApplicationDbContext();
 
-      // GET: api/StocksApi
+      #endregion
+
+      #region API
+
+      // GET: api/DetailedInfosStocks
       public IEnumerable<Models.DetailedQuoteQueryResultModel> Get()
       {
-         List<Stock> stocks = db.Stocks.Include("Description").ToList();
-         List<string> codeList = new List<string>();
-         foreach(Stock stock in stocks)
-         {
-            codeList.Add(stock.Description.Code);
-         }
+         return RetrieveStockDetailedInfos();
+      }
 
+      #endregion
+
+      #region Methods
+
+      public IEnumerable<DetailedQuoteQueryResultModel> RetrieveStockDetailedInfos()
+      {
+         List<string> codeList = db.Stocks.Select(m => m.Code).Distinct().ToList();
+         return RetrieveStockDetailedInfos(codeList);
+      }
+
+      public DetailedQuoteQueryResultModel RetrieveStockDetailedInfos(string code)
+      {
+         IEnumerable<DetailedQuoteQueryResultModel> infosList = RetrieveStockDetailedInfos(new List<string>() { code });
+         return infosList.FirstOrDefault();
+      }
+
+      public IEnumerable<DetailedQuoteQueryResultModel> RetrieveStockDetailedInfos(List<string> codeList)
+      {
          string urlPrefix = @"https://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.quotes where symbol in (";
          string codes = string.Join(@""",""", codeList);
          string urlSuffix = ")&env=store://datatables.org/alltableswithkeys";
@@ -33,44 +53,31 @@ namespace SuiviPortefeuilleRBC.Controllers
          HttpWebResponse webResponse = (HttpWebResponse)webReq.GetResponse();
 
          XmlTextReader reader = new XmlTextReader(webResponse.GetResponseStream());
-         XmlSerializer serializer = new XmlSerializer(typeof(Models.DetailedQuoteQueryResultModel));
+         XmlSerializer serializer = new XmlSerializer(typeof(DetailedQuoteQueryResultModel));
 
          var detailedList = new List<Models.DetailedQuoteQueryResultModel>();
          while(reader.Read())
          {
             if(reader.Name == "quote" && reader.IsStartElement())
             {
-               Models.DetailedQuoteQueryResultModel item = (Models.DetailedQuoteQueryResultModel)serializer.Deserialize(reader.ReadSubtree());
+               DetailedQuoteQueryResultModel item = (DetailedQuoteQueryResultModel)serializer.Deserialize(reader.ReadSubtree());
                detailedList.Add(item);
             }
          }
          reader.Close();
-
          return detailedList;
       }
 
-      // GET: api/StocksApi/5
-      public string Get(int id)
+      #endregion
+
+      protected override void Dispose(bool disposing)
       {
-         return "value";
+         if(disposing)
+         {
+            db.Dispose();
+         }
+         base.Dispose(disposing);
       }
-
-      // POST: api/StocksApi
-      public void Post([FromBody]string value)
-      {
-      }
-
-      // PUT: api/StocksApi/5
-      public void Put(int id, [FromBody]string value)
-      {
-      }
-
-      // DELETE: api/StocksApi/5
-      public void Delete(int id)
-      {
-      }
-
-
       //[HttpPost]
       //[Authorize(Roles = "canEdit")]
       //public HttpResponseMessage Post([FromUri] Operation operation)

@@ -1,12 +1,11 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 50px 15px 15px 20px;
+    margin-bottom: 50px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -21,4 +20,18 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+footer{
+    position:fixed;
+    bottom : 0;
+    padding: 10px 50px;
+    height: 50px;
+    background: #222;
+    color: AppWorkspace;
+    width: 100%;
+}
+
+#stockList{
+    margin-top: 30px;
 }
