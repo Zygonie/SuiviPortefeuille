@@ -28,7 +28,7 @@ namespace SuiviPortefeuilleRBC.BusinessServices
 
       public IEnumerable<int> GetIds()
       {
-         return unitOfWork.PortfolioRepository.GetManySelect(p => p.PortfolioId);
+         return unitOfWork.PortfolioRepository.GetManySelect(p => p.PortfolioId).ToList();
       }
 
       public Models.Portfolio GetPortfolioById(int portfolioId)
@@ -38,7 +38,7 @@ namespace SuiviPortefeuilleRBC.BusinessServices
 
       public IEnumerable<Models.Portfolio> GetAllPortfolios()
       {
-         return unitOfWork.PortfolioRepository.GetAll();
+         return unitOfWork.PortfolioRepository.GetAll().ToList();
       }
 
       public int CreatePortfolio(Models.Portfolio portfolio)

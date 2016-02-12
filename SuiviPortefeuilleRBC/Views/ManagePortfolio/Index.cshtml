@@ -29,10 +29,6 @@
     </div>
 </div>
 
-<div class="container">
-    <input type="button" id="sendmessage" value="Send" />
-</div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/signalr")
@@ -102,40 +98,46 @@
                 changeCell = row.find('td').eq(columnChange),
                 oldPrice = priceCell.text(),
                 newPrice = description.LastPrice,
-                changePercent = description.ChangePercent * 100;
+                changePercent = description.ChangePercent * 100,
+                color = "black";
 
-            priceCell.text(newPrice);
+            priceCell.text(newPrice.toFixed(2));
             changeCell.text(changePercent.toFixed(2) + " %");
+            
+            if(changePercent < 0){
+                color = "red";
+            }
+            else{
+                color = "green";
+            }
             if(oldPrice > newPrice){
                 priceCell.css( "color", "white" );
                 changeCell.css( "color", "white" );
-                priceCell.animate({backgroundColor: 'red'}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').css( "color", "red" );
-                changeCell.animate({backgroundColor: 'red'}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').css( "color", "red" );
+                priceCell.animate({backgroundColor: 'red'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(priceCell, color);});
+                changeCell.animate({backgroundColor: 'red'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(changeCell, color);});
             }
             else if(oldPrice < newPrice){
                 priceCell.css( "color", "white" );
                 changeCell.css( "color", "white" );
-                priceCell.animate({backgroundColor: 'green'}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').css( "color", "green" );
-                changeCell.animate({backgroundColor: 'green'}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').css( "color", "green" );
+                priceCell.animate({backgroundColor: 'green'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(priceCell, color);});
+                changeCell.animate({backgroundColor: 'green'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(changeCell, color);});
             }
-            if(changePercent < 0){
-                priceCell.css( "color", "red" );
-                changeCell.css( "color", "red" );
-            }
-            else{
-                priceCell.css( "color", "green" );
-                changeCell.css( "color", "green" );
-            }
+            
         };
+
+        function setColor(object, color){
+            object.css("color", color);
+        }
 
         // Start the connection.
         function init() {
             var portfolioId = @(Model.CurrentPortfolioId);
             // Call the Send method on the hub.
+            ticker.server.setCurrentPortfolioId(portfolioId);
             ticker.server.getStocksFromServer(portfolioId).done(function (stocks) {
                 $.each(stocks, function () {
                     var code = this.Code.replace(".",""),
-                        price = this.Description.LastPrice,
+                        price = this.Description.LastPrice.toFixed(2),
                         column = $('#colPrice').index(),
                         row = $('#' + code),
                         priceCell = row.find('td').eq(column);

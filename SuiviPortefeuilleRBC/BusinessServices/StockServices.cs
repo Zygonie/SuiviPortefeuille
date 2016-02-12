@@ -28,7 +28,12 @@ namespace SuiviPortefeuilleRBC.BusinessServices
 
       public IEnumerable<Models.Stock> GetStockByPortfolioId(int portfolioId)
       {
-         return unitOfWork.StockRepository.GetMany(s => s.PortfolioId == portfolioId);
+         return unitOfWork.StockRepository.GetMany(s => s.PortfolioId == portfolioId).ToList();
+      }
+
+      public IEnumerable<int> GetStockPortfolioIdsHavingStock(string code)
+      {
+         return unitOfWork.StockRepository.GetMany(s => s.Code == code).Select(s=>s.PortfolioId).ToList();
       }
 
       public Models.Stock GetStockById(int stockId)
@@ -38,7 +43,7 @@ namespace SuiviPortefeuilleRBC.BusinessServices
 
       public IEnumerable<Models.Stock> GetAllStocks()
       {
-         return unitOfWork.StockRepository.GetAll();
+         return unitOfWork.StockRepository.GetAll().ToList();
       }
 
       public int CreateStock(Models.Stock stock)

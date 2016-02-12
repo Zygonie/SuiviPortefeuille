@@ -16,5 +16,6 @@ namespace SuiviPortefeuilleRBC.BusinessServices
       bool UpdateStock(Stock stock);
       bool DeleteStock(int stockId);
       Stock GetFirst(Func<Stock, bool> where);
+      IEnumerable<int> GetStockPortfolioIdsHavingStock(string code);
    }
 }

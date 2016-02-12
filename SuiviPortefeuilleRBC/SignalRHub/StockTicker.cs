@@ -4,6 +4,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using SuiviPortefeuilleRBC.Repository;
@@ -21,7 +22,10 @@ namespace SuiviPortefeuilleRBC.SignalRHub
       private volatile bool updatingStockPrices = false;
       private readonly Timer timer;
       private IStockServices stockServices;
+      private IPortfolioServices portfolioServices;
       private IStockDescriptionServices stockDescriptionServices;
+      private readonly ApplicationDbContext db;
+      private Random random;
 
       private StockTicker(IHubConnectionContext<dynamic> clients)
       {
@@ -29,9 +33,12 @@ namespace SuiviPortefeuilleRBC.SignalRHub
          var unitWork = new UnitOfWork();
          stockServices = new StockServices(unitWork);
          stockDescriptionServices = new StockDescriptionServices(unitWork);
+         portfolioServices = new PortfolioServices(unitWork);
+         db = new ApplicationDbContext();
 
          timer = new Timer(UpdateStockPrices, null, updateInterval, updateInterval);
 
+         //random = new Random(0);
       }
 
       public static StockTicker Instance
@@ -65,7 +72,12 @@ namespace SuiviPortefeuilleRBC.SignalRHub
                   {
                      var info = infos.Where(p => p.Symbol == description.Code).FirstOrDefault<Models.DetailedQuoteQueryResultModel>();
                      description.FillInfos(info);
-                     stockDescriptionServices.UpdateStockDescription(description);
+                     stockDescriptionServices.UpdateStockDescription(description);                     
+                     
+                     //To test updates and styles at frontend
+                     //description.ChangePercent = random.NextDouble();
+                     //description.LastPrice *= random.NextDouble() + 0.5;
+                     
                      BroadcastStockPrice(description);
                   }
                }
@@ -77,7 +89,34 @@ namespace SuiviPortefeuilleRBC.SignalRHub
       
       private void BroadcastStockPrice(StockDescription description)
       {
-         Clients.All.updateStockPrice(description);
+         //Broadcast the description only to users that actually need it
+         var portfolioIds = stockServices.GetStockPortfolioIdsHavingStock(description.Code);
+
+         ////Broadcast to every interected user
+         //List<string> usernames = db.SignalRUsers.Where(u => portfolioIds.Contains(u.PortfolioId)).Select(u => u.UserName).ToList();         
+         //Clients.Users(usernames).updateStockPrice(description);
+
+         ////Autre methode: on broadcast sur toutes les connexions de tous les usagers qui ont besoin d'etre mis a jour
+         //foreach(var user in db.SignalRUsers.Where(u => portfolioIds.Contains(u.PortfolioId)))         
+         //{
+         //   //Explicit loading see https://msdn.microsoft.com/en-us/data/jj574232.aspx
+         //   //Load() is not an extension method on Queryable, so it doesn't come together with all the usual LINQ methods. 
+         //   //If you are using Entity Framework, you need to import the corresponding namespace: System.Data.Entity
+         //   db.Entry(user).Collection(u => u.Connections).Query().Where(c => c.Connected == true).Load(); //need using System.Data.Entity; 
+         //   if(user.Connections !=null)
+         //   {
+         //      foreach(var connection in user.Connections)
+         //      {
+         //         Clients.Client(connection.SignalRConnectionId).updateStockPrice(description);
+         //      }
+         //   }
+         //}
+
+         foreach(var connection in db.SignalRConnections.Where(c=>portfolioIds.Contains(c.PortfolioId)))
+         {
+            Clients.Client(connection.SignalRConnectionId).updateStockPrice(description);
+         }
+
       }
    }
 }

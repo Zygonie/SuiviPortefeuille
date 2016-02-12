@@ -253,18 +253,21 @@
     <Compile Include="Controllers\OperationController.cs" />
     <Compile Include="Controllers\PortfolioController.cs" />
     <Compile Include="Controllers\API\SimpleInfosStockController.cs" />
+    <Compile Include="Controllers\SeedDatabase.cs" />
     <Compile Include="Controllers\StockDescriptionController.cs" />
     <Compile Include="Controllers\API\DetailedInfosStocksController.cs" />
     <Compile Include="Controllers\StocksController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="SignalRHub\StockHub.cs" />
-    <Compile Include="Migrations\201601160312460_Initial.cs" />
-    <Compile Include="Migrations\201601160312460_Initial.Designer.cs">
-      <DependentUpon>201601160312460_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201602122026199_Initial.cs" />
+    <Compile Include="Migrations\201602122026199_Initial.Designer.cs">
+      <DependentUpon>201602122026199_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\SignalRConnection.cs" />
+    <Compile Include="Models\SignalRUser.cs" />
+    <Compile Include="SignalRHub\StockHub.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddOperationViewModel.cs" />
     <Compile Include="Models\CashOperationApiModel.cs" />
@@ -1392,8 +1395,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201601160312460_Initial.resx">
-      <DependentUpon>201601160312460_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201602122026199_Initial.resx">
+      <DependentUpon>201602122026199_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

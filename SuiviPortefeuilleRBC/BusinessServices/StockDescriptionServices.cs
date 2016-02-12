@@ -33,7 +33,7 @@ namespace SuiviPortefeuilleRBC.BusinessServices
 
       public IEnumerable<Models.StockDescription> GetAllStockDescriptions()
       {
-         return unitOfWork.StockDescriptionRepository.GetAll();
+         return unitOfWork.StockDescriptionRepository.GetAll().ToList();
       }
 
       public string CreateStockDescription(Models.StockDescription stockDescription)
@@ -104,7 +104,7 @@ namespace SuiviPortefeuilleRBC.BusinessServices
 
       public IEnumerable<Models.StockDescription> GetMany(Func<StockDescription, bool> where)
       {
-         return unitOfWork.StockDescriptionRepository.GetMany(where);
+         return unitOfWork.StockDescriptionRepository.GetMany(where).ToList();
       }
 
       #endregion

@@ -12,6 +12,8 @@ namespace SuiviPortefeuilleRBC.Models
       System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.Portfolio> Portfolios { get; set; }
       System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.Stock> Stocks { get; set; }
       System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.StockDescription> StockDescriptions { get; set; }
+      System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.SignalRConnection> SignalRConnections { get; set; }
+      System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.SignalRUser> SignalRUsers { get; set; }
       int SaveChanges();
    }
 
@@ -53,5 +55,7 @@ namespace SuiviPortefeuilleRBC.Models
         public virtual System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.Portfolio> Portfolios { get; set; }
         public virtual System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.Stock> Stocks { get; set; }
         public virtual System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.StockDescription> StockDescriptions { get; set; }
+        public virtual System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.SignalRConnection> SignalRConnections { get; set; }
+        public virtual System.Data.Entity.DbSet<SuiviPortefeuilleRBC.Models.SignalRUser> SignalRUsers { get; set; }
     }
 }
