@@ -12,50 +12,18 @@ namespace SuiviPortefeuilleRBC.Migrations
                 c => new
                     {
                         OperationId = c.Int(nullable: false, identity: true),
+                        Code = c.String(nullable: false),
                         Sens = c.Int(nullable: false),
                         NumberOfShares = c.Int(nullable: false),
                         Fees = c.Double(nullable: false),
                         Price = c.Double(nullable: false),
                         Amount = c.Double(nullable: false),
+                        PortfolioId = c.Int(nullable: false),
                         Date = c.DateTime(),
-                        Stock_Code = c.String(nullable: false, maxLength: 128),
-                        Portfolio_PortfolioId = c.Int(),
                     })
                 .PrimaryKey(t => t.OperationId)
-                .ForeignKey("dbo.StockDescriptions", t => t.Stock_Code, cascadeDelete: true)
-                .ForeignKey("dbo.Portfolios", t => t.Portfolio_PortfolioId)
-                .Index(t => t.Stock_Code)
-                .Index(t => t.Portfolio_PortfolioId);
-            
-            CreateTable(
-                "dbo.StockDescriptions",
-                c => new
-                    {
-                        Code = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false),
-                        LastPrice = c.Double(nullable: false),
-                        ChangePercent = c.Double(nullable: false),
-                        SpreadLowTargetPercent = c.Double(nullable: false),
-                        SpreadHighTargetPercent = c.Double(nullable: false),
-                        PriceTargetMin = c.Double(nullable: false),
-                        PriceTargetMax = c.Double(nullable: false),
-                        DividendYield = c.Double(nullable: false),
-                        Payout = c.Double(nullable: false),
-                        PriceEarningRatio = c.Double(nullable: false),
-                        DividendPerShare = c.Double(nullable: false),
-                        EarningsPerShare = c.Double(nullable: false),
-                        EpsEstimateCurrentYear = c.Double(nullable: false),
-                        PriceToBook = c.Double(nullable: false),
-                        ExDividendDate = c.DateTime(),
-                        BookToValuePerShare = c.Double(nullable: false),
-                        GrahamPrice = c.Double(nullable: false),
-                        GrahamSpread = c.Double(nullable: false),
-                        PtfPercent = c.Double(nullable: false),
-                        Amount = c.Double(nullable: false),
-                        NumberOfSharesTarget = c.Int(nullable: false),
-                        AmountTarget = c.Double(nullable: false),
-                    })
-                .PrimaryKey(t => t.Code);
+                .ForeignKey("dbo.Portfolios", t => t.PortfolioId, cascadeDelete: true)
+                .Index(t => t.PortfolioId);
             
             CreateTable(
                 "dbo.Portfolios",
@@ -87,6 +55,36 @@ namespace SuiviPortefeuilleRBC.Migrations
                 .ForeignKey("dbo.Portfolios", t => t.PortfolioId, cascadeDelete: true)
                 .Index(t => t.Code)
                 .Index(t => t.PortfolioId);
+            
+            CreateTable(
+                "dbo.StockDescriptions",
+                c => new
+                    {
+                        Code = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false),
+                        LastPrice = c.Double(nullable: false),
+                        ChangePercent = c.Double(nullable: false),
+                        SpreadLowTargetPercent = c.Double(nullable: false),
+                        SpreadHighTargetPercent = c.Double(nullable: false),
+                        PriceTargetMin = c.Double(nullable: false),
+                        PriceTargetMax = c.Double(nullable: false),
+                        DividendYield = c.Double(nullable: false),
+                        Payout = c.Double(nullable: false),
+                        PriceEarningRatio = c.Double(nullable: false),
+                        DividendPerShare = c.Double(nullable: false),
+                        EarningsPerShare = c.Double(nullable: false),
+                        EpsEstimateCurrentYear = c.Double(nullable: false),
+                        PriceToBook = c.Double(nullable: false),
+                        ExDividendDate = c.DateTime(),
+                        BookToValuePerShare = c.Double(nullable: false),
+                        GrahamPrice = c.Double(nullable: false),
+                        GrahamSpread = c.Double(nullable: false),
+                        PtfPercent = c.Double(nullable: false),
+                        Amount = c.Double(nullable: false),
+                        NumberOfSharesTarget = c.Int(nullable: false),
+                        AmountTarget = c.Double(nullable: false),
+                    })
+                .PrimaryKey(t => t.Code);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -166,8 +164,7 @@ namespace SuiviPortefeuilleRBC.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.Stocks", "PortfolioId", "dbo.Portfolios");
             DropForeignKey("dbo.Stocks", "Code", "dbo.StockDescriptions");
-            DropForeignKey("dbo.Operations", "Portfolio_PortfolioId", "dbo.Portfolios");
-            DropForeignKey("dbo.Operations", "Stock_Code", "dbo.StockDescriptions");
+            DropForeignKey("dbo.Operations", "PortfolioId", "dbo.Portfolios");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
@@ -176,16 +173,15 @@ namespace SuiviPortefeuilleRBC.Migrations
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.Stocks", new[] { "PortfolioId" });
             DropIndex("dbo.Stocks", new[] { "Code" });
-            DropIndex("dbo.Operations", new[] { "Portfolio_PortfolioId" });
-            DropIndex("dbo.Operations", new[] { "Stock_Code" });
+            DropIndex("dbo.Operations", new[] { "PortfolioId" });
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
+            DropTable("dbo.StockDescriptions");
             DropTable("dbo.Stocks");
             DropTable("dbo.Portfolios");
-            DropTable("dbo.StockDescriptions");
             DropTable("dbo.Operations");
         }
     }

@@ -36,7 +36,6 @@ namespace SuiviPortefeuilleRBC.Controllers
         }
 
         // GET: Operation/Create
-       [Authorize(Roles = "canEdit")]
         public ActionResult Create()
         {
             return View();
@@ -46,7 +45,6 @@ namespace SuiviPortefeuilleRBC.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "canEdit")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Sens,NumberOfShares,Fees,Price,Date")] Operation operation)
         {
@@ -61,7 +59,6 @@ namespace SuiviPortefeuilleRBC.Controllers
         }
 
         // GET: Operation/Edit/5
-       [Authorize(Roles = "canEdit")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -80,7 +77,6 @@ namespace SuiviPortefeuilleRBC.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "canEdit")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "OperationId,Sens,NumberOfShares,Fees,Price,Amount,Date")] Operation operation)
         {
@@ -94,7 +90,6 @@ namespace SuiviPortefeuilleRBC.Controllers
         }
 
         // GET: Operation/Delete/5
-       [Authorize(Roles = "canEdit")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -111,7 +106,6 @@ namespace SuiviPortefeuilleRBC.Controllers
 
         // POST: Operation/Delete/5
         [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "canEdit")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {

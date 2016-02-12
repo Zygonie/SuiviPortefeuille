@@ -85,7 +85,7 @@ namespace SuiviPortefeuilleRBC.Models
       public void FillInfos(DetailedQuoteQueryResultModel infos)
       {
          LastPrice = double.Parse(infos.LastTradePriceOnly);
-         ChangePercent = double.Parse(infos.ChangeinPercent.Replace("%", "")) / 100;
+         ChangePercent = double.Parse(infos.ChangeinPercent.Replace("%", "")) / 100; //On affiche en pourcentage (format P2)
          DividendYield = double.Parse(infos.DividendYield) / 100;         
          PriceEarningRatio = double.Parse(infos.PERatio);
          DividendPerShare = double.Parse(infos.DividendShare);
@@ -96,6 +96,13 @@ namespace SuiviPortefeuilleRBC.Models
          BookToValuePerShare = double.Parse(infos.BookValue);
          Payout = DividendPerShare / EarningsPerShare;
          GrahamPrice = Math.Sqrt(22.5 * EarningsPerShare * BookToValuePerShare);
+         GrahamSpread = (GrahamPrice - LastPrice) / GrahamPrice;
+      }
+
+      public void FillInfos(SimpleQuoteQueryResultModel infos)
+      {
+         LastPrice = double.Parse(infos.LastTradePriceOnly);
+         ChangePercent = double.NaN;
          GrahamSpread = (GrahamPrice - LastPrice) / GrahamPrice;
       }
 

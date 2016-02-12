@@ -29,9 +29,16 @@
     </div>
 </div>
 
+<div class="container">
+    <input type="button" id="sendmessage" value="Send" />
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/signalr")
+    <script src="~/signalr/hubs"></script>
     <script>
+    $(function () {
         var url = '@Url.Action("DisplayAddOperation", "ManagePortfolio", new { currentPortfolioId = Model.CurrentPortfolioId })';
         $('#btnAddLine').click(function () {
             $('#myModalContent').load(url, function (response, status, xhr) {
@@ -44,6 +51,11 @@
                 }
             });
         })
+
+        $("#newOperation").on("show.bs.modal", function () {
+            console.log("show.bs.modal");
+            $("#Date").datepicker();
+        });
 
         $("button[value='buysell']").click(function () {
             var url = $(this).data("url");
@@ -75,5 +87,75 @@
         var changePortfolioId = function () {
             $("#PtfIdsajaxForm").submit();
         };
-    </script>
+
+        //TestChat
+        // Declare a proxy to reference the hub.
+        var ticker = $.connection.stockHub;
+        // Create a function that the hub can call to broadcast messages.
+        ticker.client.updateStockPrice = function (description) {
+            var code = description.Code.replace(".",""),
+                price = description.LastPrice,
+                columnPrice = $('#colPrice').index(),
+                columnChange = $('#colChange').index(),
+                row = $('#' + code),
+                priceCell = row.find('td').eq(columnPrice),
+                changeCell = row.find('td').eq(columnChange),
+                oldPrice = priceCell.text(),
+                newPrice = description.LastPrice,
+                changePercent = description.ChangePercent * 100;
+
+            priceCell.text(newPrice);
+            changeCell.text(changePercent.toFixed(2) + " %");
+            if(oldPrice > newPrice){
+                priceCell.css( "color", "white" );
+                changeCell.css( "color", "white" );
+                priceCell.animate({backgroundColor: 'red'}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').css( "color", "red" );
+                changeCell.animate({backgroundColor: 'red'}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').css( "color", "red" );
+            }
+            else if(oldPrice < newPrice){
+                priceCell.css( "color", "white" );
+                changeCell.css( "color", "white" );
+                priceCell.animate({backgroundColor: 'green'}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').css( "color", "green" );
+                changeCell.animate({backgroundColor: 'green'}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').css( "color", "green" );
+            }
+            if(changePercent < 0){
+                priceCell.css( "color", "red" );
+                changeCell.css( "color", "red" );
+            }
+            else{
+                priceCell.css( "color", "green" );
+                changeCell.css( "color", "green" );
+            }
+        };
+
+        // Start the connection.
+        function init() {
+            var portfolioId = @(Model.CurrentPortfolioId);
+            // Call the Send method on the hub.
+            ticker.server.getStocksFromServer(portfolioId).done(function (stocks) {
+                $.each(stocks, function () {
+                    var code = this.Code.replace(".",""),
+                        price = this.Description.LastPrice,
+                        column = $('#colPrice').index(),
+                        row = $('#' + code),
+                        priceCell = row.find('td').eq(column);
+                    priceCell.text(price);
+                });
+            });
+        }
+
+        $.connection.hub.start().done(init);
+
+        @*$.ajax({
+            url: "@Html.Action("StockList", "ManagePortfolio", new { currentPortfolioId = Model.CurrentPortfolioId })",
+            data: { /* add other additional parameters */ },
+            cache: false,
+            type: "GET",
+            dataType: "html",
+            success: function (data, textStatus, XMLHttpRequest) {
+                SetData(data);
+        }
+    });*@
+    })
+</script>
 }

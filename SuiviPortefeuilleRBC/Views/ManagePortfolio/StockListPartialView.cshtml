@@ -4,21 +4,21 @@
     <tr>
         <th/>
         <th />
-        <th>@Html.DisplayNameFor(model => model.Description.Name)</th>
-        <th>@Html.DisplayNameFor(model => model.Description.Code)</th>
-        <th>@Html.DisplayNameFor(model => model.NumberOfShares)</th>
-        <th>@Html.DisplayNameFor(model => model.UnitaryPrice)</th>
-        <th>@Html.DisplayNameFor(model => model.Description.LastPrice)</th>
-        <th>@Html.DisplayNameFor(model => model.Description.ChangePercent)</th>
-        <th>@Html.DisplayNameFor(model => model.PerformanceCash)</th>
-        <th>@Html.DisplayNameFor(model => model.PerformancePercent)</th>
+        <th id="colName">@Html.DisplayNameFor(model => model.Description.Name)</th>
+        <th id="colCode">@Html.DisplayNameFor(model => model.Description.Code)</th>
+        <th id ="colNbShare">@Html.DisplayNameFor(model => model.NumberOfShares)</th>
+        <th id="colPRU">@Html.DisplayNameFor(model => model.UnitaryPrice)</th>
+        <th id="colPrice">@Html.DisplayNameFor(model => model.Description.LastPrice)</th>
+        <th id="colChange">@Html.DisplayNameFor(model => model.Description.ChangePercent)</th>
+        <th id="colPerfCash">@Html.DisplayNameFor(model => model.PerformanceCash)</th>
+        <th id="colPerfPercent">@Html.DisplayNameFor(model => model.PerformancePercent)</th>
     </tr>
 
     @foreach(var item in Model)
     {
-        <tr>
+        <tr id="@item.Code.Replace(".","")">
             <td>
-                <button class="btn btn-success" data-toggle="modal" data-target="#newOperation"
+                <button class="btn btn-xs btn-success" data-toggle="modal" data-target="#newOperation"
                         value="buysell" data-url="@Url.Action("BuySellStock", "ManagePortfolio",
                         new
                         {
@@ -29,7 +29,7 @@
                 </button>
             </td>
             <td>
-                <button class="btn btn-danger" data-toggle="modal" data-target="#newOperation"
+                <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#newOperation"
                         value="buysell" data-url="@Url.Action("BuySellStock", "ManagePortfolio",
                         new
                         {

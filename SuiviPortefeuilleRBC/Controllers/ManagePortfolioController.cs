@@ -9,17 +9,27 @@ using System.Net;
 using SuiviPortefeuilleRBC.Models;
 using System.Xml;
 using System.Xml.Serialization;
-
+using SuiviPortefeuilleRBC.BusinessServices;
 //using System.Data.Entity.Migrations;
 
 namespace SuiviPortefeuilleRBC.Controllers
 {
    public class ManagePortfolioController : Controller
    {
-      private ApplicationDbContext db = new ApplicationDbContext();
+      private IStockServices stockServices;
+      private IStockDescriptionServices stockDescriptionServices;
+      private IPortfolioServices portfolioServices;
+      private IOperationServices operationServices;
 
-      public ManagePortfolioController()
+      public ManagePortfolioController(IStockServices stockServices, 
+         IStockDescriptionServices stockDescriptionServices, 
+         IPortfolioServices portfolioServices,
+         IOperationServices operationServices)
       {
+         this.stockServices = stockServices;
+         this.stockDescriptionServices = stockDescriptionServices;
+         this.portfolioServices = portfolioServices;
+         this.operationServices = operationServices;
       }
 
       // GET: ManagePortfolio
@@ -27,7 +37,7 @@ namespace SuiviPortefeuilleRBC.Controllers
       {
          UpdateStockDescription();
          ManagePortfolioViewModel viewModel = new ManagePortfolioViewModel();
-         viewModel.PortfolioIds = db.Portfolios.Select(p=>p.PortfolioId).Distinct().ToList();
+         viewModel.PortfolioIds = (List<int>)portfolioServices.GetIds();
          if(viewModel.PortfolioIds.Count > 0)
          {
             viewModel.CurrentPortfolioId = viewModel.PortfolioIds[0];
@@ -39,49 +49,49 @@ namespace SuiviPortefeuilleRBC.Controllers
       public ActionResult StockList(int currentPortfolioId)
       {
          //Voir pour passer le modele au complet 
-         return PartialView("StockListPartialView", db.Stocks.Where(p => p.PortfolioId == currentPortfolioId).ToList());
+         var stocks = stockServices.GetStockByPortfolioId(currentPortfolioId);
+         return PartialView("StockListPartialView", stocks);
       }
 
       // GET: AddOperation
       public ActionResult DisplayAddOperation(int currentPortfolioId)
       {
-         AddOperationViewModel addViewModel = new AddOperationViewModel(currentPortfolioId);
-         addViewModel.Sens = OperationOnStock.Buy;
-         return PartialView("AddOperation", addViewModel);
+         Operation operation = new Operation(currentPortfolioId);
+         operation.Sens = OperationOnStock.Buy;
+         return PartialView("AddOperation", operation);
       }
 
       // POST: AddOperation
       [HttpPost]
-      public ActionResult AddOperation(AddOperationViewModel addViewModel)
+      public ActionResult AddOperation(Operation operation)
       {
          if(ModelState.IsValid)
          {
-            var existingStock = db.Stocks.Where(s => s.Code == addViewModel.Code && s.PortfolioId == addViewModel.PortfolioId).FirstOrDefault<Stock>();
+            var existingStock = stockServices.GetFirst(s => s.Code == operation.Code && s.PortfolioId == operation.PortfolioId);
 
             if(existingStock == null)
             {
-               var existingDescription = db.StockDescriptions.Where(s => s.Code == addViewModel.Code).FirstOrDefault<StockDescription>();
+               var existingDescription = stockDescriptionServices.GetFirst(s => s.Code == operation.Code);
                Stock stock = null;
                if(existingDescription == null)
                {
-                  stock = new Stock(addViewModel);
+                  stock = new Stock(operation);
                }
                else
                {
-                  stock = new Stock(addViewModel, existingDescription);
+                  stock = new Stock(operation, existingDescription);
                }
-               db.Stocks.Add(stock);
-               db.SaveChanges();
+               stockServices.CreateStock(stock);
             }
             else
             {
-               existingStock.UpdateStock(addViewModel);
-               db.Entry(existingStock).State = EntityState.Modified;
-               db.SaveChanges();
+               existingStock.UpdateStock(operation);
+               stockServices.UpdateStock(existingStock);
                UpdateStockDescription();
             }
-
-            return PartialView("StockListPartialView", db.Stocks.ToList());
+            var stocks = stockServices.GetStockByPortfolioId(operation.PortfolioId);
+            operationServices.CreateOperation(operation);
+            return PartialView("StockListPartialView", stocks);
          }
          return new JsonResult()
          {
@@ -93,11 +103,11 @@ namespace SuiviPortefeuilleRBC.Controllers
       // GET: Buy more / sell stock
       public ActionResult BuySellStock(int stockId, OperationOnStock sens)
       {
-         Stock stock = db.Stocks.Where(s=>s.StockId == stockId).FirstOrDefault();
-         AddOperationViewModel addViewModel = new AddOperationViewModel(stock.PortfolioId);
-         addViewModel.Sens = sens;
-         addViewModel.Code = stock.Code;
-         return PartialView("AddOperation", addViewModel);
+         Stock stock = stockServices.GetStockById(stockId);
+         Operation operation = new Operation(stock.PortfolioId);
+         operation.Sens = sens;
+         operation.Code = stock.Code;
+         return PartialView("AddOperation", operation);
       }
 
       #region Methods
@@ -107,14 +117,13 @@ namespace SuiviPortefeuilleRBC.Controllers
          using(Controllers.DetailedInfosStocksController controller = new Controllers.DetailedInfosStocksController())
          {
             IEnumerable<Models.DetailedQuoteQueryResultModel> infos = controller.RetrieveStockDetailedInfos();
-            List<string> codes = infos.Select(p=>p.Symbol).ToList();
-            foreach(StockDescription description in db.StockDescriptions.Where(p=>codes.Contains(p.Code)))
+            List<string> codes = infos.Select(p=>p.Symbol).ToList();            
+            foreach(StockDescription description in stockDescriptionServices.GetMany(p=>codes.Contains(p.Code)))
             {
                var info = infos.Where(p => p.Symbol == description.Code).FirstOrDefault < Models.DetailedQuoteQueryResultModel>();
                description.FillInfos(info);
-               db.Entry(description).State = EntityState.Modified;
+               stockDescriptionServices.UpdateStockDescription(description);
             }
-            db.SaveChanges();
          }
       }
 

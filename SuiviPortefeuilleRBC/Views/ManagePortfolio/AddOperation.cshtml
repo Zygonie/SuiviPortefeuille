@@ -1,4 +1,4 @@
-﻿@model SuiviPortefeuilleRBC.Models.AddOperationViewModel
+﻿@model SuiviPortefeuilleRBC.Models.Operation
 
 
 <div class="modal-header">
@@ -21,7 +21,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Sens, "Sens", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(m => m.Sens, EnumHelper.GetSelectList(typeof(SuiviPortefeuilleRBC.Models.OperationOnStock),Model.Sens),
+                @Html.DropDownListFor(m => m.Sens, EnumHelper.GetSelectList(typeof(SuiviPortefeuilleRBC.Models.OperationOnStock), Model.Sens),
                 new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Sens, "", new { @class = "text-danger" })
             </div>
@@ -41,10 +41,10 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.UnitaryPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.UnitaryPrice, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UnitaryPrice, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
@@ -52,6 +52,16 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Fees, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Fees, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Date, new { @class = "form-control datepicker" })
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                @*<span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>*@
             </div>
         </div>
     </div>

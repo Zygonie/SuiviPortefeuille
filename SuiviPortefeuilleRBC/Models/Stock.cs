@@ -71,13 +71,13 @@ namespace SuiviPortefeuilleRBC.Models
       {
       }
       
-      public Stock(AddOperationViewModel viewModel)
-         : this(viewModel, null)
+      public Stock(Operation operation)
+         : this(operation, null)
       {
       }
 
-      public Stock(AddOperationViewModel viewModel, StockDescription description)
-         : this(viewModel.PortfolioId, viewModel.Code, viewModel.NumberOfShares, viewModel.NumberOfShares * viewModel.UnitaryPrice + viewModel.Fees, description)
+      public Stock(Operation operation, StockDescription description)
+         : this(operation.PortfolioId, operation.Code, operation.NumberOfShares, operation.NumberOfShares * operation.Price + operation.Fees, description)
       {         
       }      
 
@@ -98,19 +98,19 @@ namespace SuiviPortefeuilleRBC.Models
          PerformancePercent = (this.Description.LastPrice - UnitaryPrice) / UnitaryPrice;
       }
 
-      public void UpdateStock(AddOperationViewModel viewModel)
+      public void UpdateStock(Operation operation)
       {
-         switch(viewModel.Sens)
+         switch(operation.Sens)
          {
             case  OperationOnStock.Buy:
-               double invested = viewModel.NumberOfShares * viewModel.UnitaryPrice + viewModel.Fees;
-               this.NumberOfShares += viewModel.NumberOfShares;
+               double invested = operation.NumberOfShares * operation.Price + operation.Fees;
+               this.NumberOfShares += operation.NumberOfShares;
                this.InvestedValue += invested;
                this.UnitaryPrice = this.InvestedValue / this.NumberOfShares;
                break;
             case OperationOnStock.Sell:
-               this.NumberOfShares -= viewModel.NumberOfShares;
-               this.InvestedValue -= viewModel.NumberOfShares * viewModel.UnitaryPrice;
+               this.NumberOfShares -= operation.NumberOfShares;
+               this.InvestedValue -= operation.NumberOfShares * operation.Price;
                break;
             default:
                throw new Exception();

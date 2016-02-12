@@ -8,9 +8,11 @@ namespace SuiviPortefeuilleRBC.Models
 {
    public class Operation
    {
+      #region
+
       public int OperationId { get; set; }
       [Required]
-      public StockDescription Stock { get; set; }
+      public string Code { get; set; }
       [Required]
       public OperationOnStock Sens { get; set; }
       [Required]
@@ -20,7 +22,25 @@ namespace SuiviPortefeuilleRBC.Models
       [Required]
       public double Price { get; set; }
       [Required]
-      public double Amount { get; set; }      
+      public double Amount { get; set; }
+      [Required]
+      public int PortfolioId { get; set; }
+      [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
       public DateTime? Date { get; set; }
+
+      #endregion
+
+      #region Constructors
+
+      public Operation()
+      {
+      }
+
+      public Operation(int portfolioId)
+      {
+         this.PortfolioId = portfolioId;
+      }
+
+      #endregion
    }
 }
