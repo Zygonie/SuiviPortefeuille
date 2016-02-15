@@ -32,6 +32,20 @@ namespace SuiviPortefeuilleRBC.Controllers
 
          try
          {
+            #region Add user
+
+            if(!(context.Users.Any(u => u.UserName == "guillaume.androz@gmail.com")))
+            {
+               var userStore = new UserStore<ApplicationUser>(context);
+               var userManager = new UserManager<ApplicationUser>(userStore);
+               var userToInsert = new ApplicationUser { UserName = "guillaume.androz@gmail.com" };
+               userManager.Create(userToInsert, "testGitIgnore");
+            }
+
+            #endregion
+
+            #region Add portfolio
+
             context.Portfolios.AddOrUpdate(p => p.Name,
                new Portfolio
                {
@@ -39,6 +53,9 @@ namespace SuiviPortefeuilleRBC.Controllers
                   TargetValue = 50000
                });
 
+            #endregion
+
+            #region Add descriptions
             List<StockDescription> descriptions = new List<StockDescription>
             {
                new StockDescription { Code = "Marge", Name = "Marge", ExDividendDate = DateTime.Now},
@@ -83,11 +100,16 @@ namespace SuiviPortefeuilleRBC.Controllers
             descriptions.ForEach(s => context.StockDescriptions.AddOrUpdate(p => p.Code, s));
             context.SaveChanges();
 
+            #endregion
+
+            #region Add Stocks
+
             var descriptionRY = context.StockDescriptions.First(p => p.Code == "RY.TO");
             var descriptionNA = context.StockDescriptions.First(p => p.Code == "NA.TO");
             var descriptionAAPL = context.StockDescriptions.First(p => p.Code == "AAPL");
             var ptf = context.Portfolios.First(p => p.Name == "MargeRBC");
 
+            //Add stocks
             var stockRY = new Stock();
             stockRY.Code = descriptionRY.Code;
             stockRY.PortfolioId = ptf.PortfolioId;
@@ -112,6 +134,8 @@ namespace SuiviPortefeuilleRBC.Controllers
             context.Stocks.AddOrUpdate(p => p.StockId, new Stock[] { stockRY, stockNA, stockAAPL });
 
             context.SaveChanges();
+
+            #endregion
          }
          catch(System.Data.Entity.Validation.DbEntityValidationException ex)
          {

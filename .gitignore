@@ -161,6 +161,7 @@ $RECYCLE.BIN/
 # ==========================
 AppSettingsSecrets.config
 /SuiviPortefeuilleRBC/Properties/PublishProfiles
+/SuiviPortefeuilleRBC/Controllers/SeedDatabase.cs
 *.mdf
 *.ldf
 /packages
