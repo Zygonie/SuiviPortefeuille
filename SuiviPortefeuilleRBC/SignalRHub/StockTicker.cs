@@ -72,13 +72,16 @@ namespace SuiviPortefeuilleRBC.SignalRHub
                   {
                      var info = infos.Where(p => p.Symbol == description.Code).FirstOrDefault<Models.DetailedQuoteQueryResultModel>();
                      description.FillInfos(info);
-                     stockDescriptionServices.UpdateStockDescription(description);                     
-                     
-                     //To test updates and styles at frontend
-                     //description.ChangePercent = random.NextDouble();
-                     //description.LastPrice *= random.NextDouble() + 0.5;
-                     
-                     BroadcastStockPrice(description);
+                     if(description.HasChanged)
+                     {
+                        stockDescriptionServices.UpdateStockDescription(description);
+
+                        //To test updates and styles at frontend
+                        //description.ChangePercent = random.NextDouble();
+                        //description.LastPrice *= random.NextDouble() + 0.5;
+
+                        BroadcastStockPrice(description);
+                     }
                   }
                }
 

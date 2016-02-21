@@ -179,7 +179,8 @@ namespace SuiviPortefeuilleRBC.Repository
       /// <returns>A single record that matches the specified criteria</returns>
       public TEntity GetSingle(Func<TEntity, bool> predicate)
       {
-         return DbSet.Single<TEntity>(predicate);
+         var res = DbSet.SingleOrDefault<TEntity>(predicate);
+         return res;
       }
 
       /// <summary>
@@ -189,7 +190,7 @@ namespace SuiviPortefeuilleRBC.Repository
       /// <returns>A single record containing the first record matching the specified criteria</returns>
       public TEntity GetFirst(Func<TEntity, bool> predicate)
       {
-         return DbSet.First<TEntity>(predicate);
+         return DbSet.FirstOrDefault<TEntity>(predicate);
       }
 
       /// <summary>

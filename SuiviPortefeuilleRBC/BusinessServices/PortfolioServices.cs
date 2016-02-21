@@ -26,9 +26,9 @@ namespace SuiviPortefeuilleRBC.BusinessServices
 
       #region Interface implementation
 
-      public IEnumerable<int> GetIds()
+      public IEnumerable<Models.Portfolio> GetPortfoliosForUser(string username)
       {
-         return unitOfWork.PortfolioRepository.GetManySelect(p => p.PortfolioId).ToList();
+         return unitOfWork.PortfolioRepository.GetMany(p => p.UserName == username).ToList();
       }
 
       public Models.Portfolio GetPortfolioById(int portfolioId)

@@ -92,9 +92,9 @@ namespace SuiviPortefeuilleRBC.BusinessServices
          return success;
       }
 
-      public Stock GetFirst(Func<Stock, bool> where)
+      public Stock GetSingle(Func<Stock, bool> where)
       {
-         return unitOfWork.StockRepository.GetFirst(where);
+         return unitOfWork.StockRepository.GetSingle(where);
       }
 
       #endregion

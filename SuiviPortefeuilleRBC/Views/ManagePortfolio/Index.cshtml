@@ -14,8 +14,8 @@
     new { id = "PtfIdsajaxForm" }))
 {
     @Html.DropDownListFor(m => m.CurrentPortfolioId,
-    new SelectList(Model.PortfolioIds),
-    new { onchange = "changePortfolioId()" })
+    new SelectList(Model.Portfolios, "Value", "Text"),
+    new { onchange = "$(this.form).submit();" })
 }
 
 <button id="btnAddLine" class="btn btn-default" data-toggle="modal" data-target="#newOperation">Add Operation</button>
@@ -34,130 +34,153 @@
     @Scripts.Render("~/bundles/signalr")
     <script src="~/signalr/hubs"></script>
     <script>
-    $(function () {
-        var url = '@Url.Action("DisplayAddOperation", "ManagePortfolio", new { currentPortfolioId = Model.CurrentPortfolioId })';
-        $('#btnAddLine').click(function () {
-            $('#myModalContent').load(url, function (response, status, xhr) {
-                if (status == "error") {
-                    var msg = "Sorry but there was an error: ";
-                    $("#error").html(msg + xhr.status + " " + xhr.statusText);
-                }
-                else {
-                    $('#newOperation').modal('show');
-                }
-            });
-        })
+        $(function () {
 
-        $("#newOperation").on("show.bs.modal", function () {
-            console.log("show.bs.modal");
-            $("#Date").datepicker();
-        });
-
-        $("button[value='buysell']").click(function () {
-            var url = $(this).data("url");
-            $('#myModalContent').load(url, function (response, status, xhr) {
-                if (status == "error") {
-                    var msg = "Sorry but there was an error: ";
-                    $("#error").html(msg + xhr.status + " " + xhr.statusText);
-                }
-                else {
-                    $('#newOperation').modal('show');
-                }
-            });
-        });
-
-        var onSubmitSuccess = function (result) {
-            $('#newOperation').modal('hide');
-            if (typeof result.success != 'undefined') {
-                if (!result.success) {
-                    alert('Operation could not be added');
-                } else {
-                    alert('Impossible!');
-                }
-            }
-            else {
-                alert('Operation has been added');
-            }
-        };
-
-        var changePortfolioId = function () {
-            $("#PtfIdsajaxForm").submit();
-        };
-
-        //TestChat
-        // Declare a proxy to reference the hub.
-        var ticker = $.connection.stockHub;
-        // Create a function that the hub can call to broadcast messages.
-        ticker.client.updateStockPrice = function (description) {
-            var code = description.Code.replace(".",""),
-                price = description.LastPrice,
-                columnPrice = $('#colPrice').index(),
-                columnChange = $('#colChange').index(),
-                row = $('#' + code),
-                priceCell = row.find('td').eq(columnPrice),
-                changeCell = row.find('td').eq(columnChange),
-                oldPrice = priceCell.text(),
-                newPrice = description.LastPrice,
-                changePercent = description.ChangePercent * 100,
-                color = "black";
-
-            priceCell.text(newPrice.toFixed(2));
-            changeCell.text(changePercent.toFixed(2) + " %");
-            
-            if(changePercent < 0){
-                color = "red";
-            }
-            else{
-                color = "green";
-            }
-            if(oldPrice > newPrice){
-                priceCell.css( "color", "white" );
-                changeCell.css( "color", "white" );
-                priceCell.animate({backgroundColor: 'red'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(priceCell, color);});
-                changeCell.animate({backgroundColor: 'red'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(changeCell, color);});
-            }
-            else if(oldPrice < newPrice){
-                priceCell.css( "color", "white" );
-                changeCell.css( "color", "white" );
-                priceCell.animate({backgroundColor: 'green'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(priceCell, color);});
-                changeCell.animate({backgroundColor: 'green'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(changeCell, color);});
-            }
-            
-        };
-
-        function setColor(object, color){
-            object.css("color", color);
-        }
-
-        // Start the connection.
-        function init() {
-            var portfolioId = @(Model.CurrentPortfolioId);
-            // Call the Send method on the hub.
-            ticker.server.setCurrentPortfolioId(portfolioId);
-            ticker.server.getStocksFromServer(portfolioId).done(function (stocks) {
-                $.each(stocks, function () {
-                    var code = this.Code.replace(".",""),
-                        price = this.Description.LastPrice.toFixed(2),
-                        column = $('#colPrice').index(),
-                        row = $('#' + code),
-                        priceCell = row.find('td').eq(column);
-                    priceCell.text(price);
+            /*
+             * Add operation - load view as modal
+             */
+            $('#btnAddLine').click(function () {
+                var url = '@Url.Action("DisplayAddOperation", "ManagePortfolio", new { currentPortfolioId = Model.CurrentPortfolioId })';
+                $('#myModalContent').load(url, function (response, status, xhr) {
+                    if (status == "error") {
+                        var msg = "Sorry but there was an error: ";
+                        $("#error").html(msg + xhr.status + " " + xhr.statusText);
+                    }
+                    else {
+                        $('#newOperation').modal('show');
+                    }
                 });
-            });
-        }
+            })
 
-        $.connection.hub.start().done(init);
+            //$("#newOperation").on("show.bs.modal", function () {
+            //    console.log("show.bs.modal");
+            //    $("#Date").datepicker();
+            //});
 
-        @*$.ajax({
-            url: "@Html.Action("StockList", "ManagePortfolio", new { currentPortfolioId = Model.CurrentPortfolioId })",
-            data: { /* add other additional parameters */ },
-            cache: false,
-            type: "GET",
-            dataType: "html",
-            success: function (data, textStatus, XMLHttpRequest) {
-                SetData(data);
-        }
-    });*@
-    })
+            /*
+             * Buttons Buy/Sell callback
+             */
+            //$("button[value='buysell']").click(function () {
+            //    var url = $(this).data("url");
+            //    $('#myModalContent').load(url, function (response, status, xhr) {
+            //        if (status == "error") {
+            //            var msg = "Sorry but there was an error: ";
+            //            $("#error").html(msg + xhr.status + " " + xhr.statusText);
+            //        }
+            //        else {
+            //            $('#newOperation').modal('show');
+            //        }
+            //    });
+            //});
+
+            /*
+             * The new operation form submit has successed
+             */
+            //var onSubmitSuccess = function (result) {
+            //    $('#newOperation').modal('hide');
+            //    if (typeof result.success != 'undefined') {
+            //        if (!result.success) {
+            //            alert('Operation could not be added');
+            //        } else {
+            //            alert('Impossible!');
+            //        }
+            //    }
+            //    else {
+            //        alert('Operation has been added');
+            //    }
+            //};
+
+            /*
+             * SignalR
+             */
+            // Declare a proxy to reference the hub.
+            var ticker = $.connection.stockHub;
+            window.hubReady = $.connection.hub.start();
+            // Create a function that the hub can call to broadcast messages.
+            ticker.client.updateStockPrice = function (description) {
+                var code = description.Code.replace(".",""),
+                    price = description.LastPrice,
+                    columnPrice = $('#colPrice').index(),
+                    columnChange = $('#colChange').index(),
+                    row = $('#' + code),
+                    priceCell = row.find('td').eq(columnPrice),
+                    changeCell = row.find('td').eq(columnChange),
+                    oldPrice = parseFloat(priceCell.text()),
+                    newPrice = description.LastPrice,
+                    changePercent = description.ChangePercent * 100,
+                    color = "black";
+
+                priceCell.text(newPrice.toFixed(2));
+                changeCell.text(changePercent.toFixed(2) + " %");
+
+                if(changePercent < 0){
+                    color = "red";
+                }
+                else{
+                    color = "green";
+                }
+                if(oldPrice > newPrice){
+                    priceCell.css( "color", "white" );
+                    changeCell.css( "color", "white" );
+                    priceCell.animate({backgroundColor: 'red'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(priceCell, color);});
+                    changeCell.animate({backgroundColor: 'red'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(changeCell, color);});
+                }
+                else if(oldPrice < newPrice){
+                    priceCell.css( "color", "white" );
+                    changeCell.css( "color", "white" );
+                    priceCell.animate({backgroundColor: 'green'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(priceCell, color);});
+                    changeCell.animate({backgroundColor: 'green'}, 'slow').animate({backgroundColor: 'transparent'}, 'fast', function(){setColor(changeCell, color);});
+                }
+                else{
+                    priceCell.css( "backgroundColor", "transparent" );
+                    changeCell.css( "backgroundColor", "transparent" );
+                }
+            };
+
+            function setColor(object, color){
+                object.css("color", color);
+            }
+
+            // Start the connection.
+            function init() {
+                var portfolioId = parseInt($("#CurrentPortfolioId option:selected").val()); @*@(Model.CurrentPortfolioId);*@
+                // Call the Send method on the hub.
+                ticker.server.setCurrentPortfolioId(portfolioId);
+                ticker.server.getStocksFromServer(portfolioId).done(function (stocks) {
+                    $.each(stocks, function () {
+                        var code = this.Code.replace(".",""),
+                            change = this.Description.ChangePercent,
+                            perf = this.PerformancePercent,
+                            columnPrice = $('#colPrice').index(),
+                            columnChange = $('#colChange').index(),
+                            row = $('#' + code),
+                            priceCell = $(row).find('td').eq(columnPrice),
+                            changeCell = $(row).find('td').eq(columnChange);
+
+                        if(change != NaN)
+                        {
+                            if(change < 0){
+                                priceCell.animate({backgroundColor: 'red', color: "white"}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').animate({color:"red"},"fast");
+                                changeCell.animate({backgroundColor: 'red', color: "white"}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').animate({color:"red"},"fast");
+                            }
+                            else if(change > 0){
+                                priceCell.animate({backgroundColor: 'green', color: "white"}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').animate({color:"green"},"fast");
+                                changeCell.animate({backgroundColor: 'green', color: "white"}, 'fast').animate({backgroundColor: 'transparent'}, 'fast').animate({color:"green"},"fast");;
+                            }
+                        }
+                        if (perf < 0) {
+                            $(row).addClass('downStock');
+                        }
+                        else {
+                            $(row).addClass('upStock');
+                        }
+                    });
+                });
+            }
+
+            //ticker.start().done(init);            
+            window.hubReady.done(init); 
+            window.hubReady.fail(function(error){console.log(error);})
+        })
 </script>
 }

@@ -23,7 +23,7 @@ namespace SuiviPortefeuilleRBC.Models
       [Key, Column(Order = 2)]
       public int PortfolioId { get; set; }
       
-      public virtual StockDescription Description { get; set; }
+      public StockDescription Description { get; set; }
 
       [Required]
       [DisplayName("# Shares")]

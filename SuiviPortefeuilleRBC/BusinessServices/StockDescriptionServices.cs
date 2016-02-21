@@ -97,9 +97,9 @@ namespace SuiviPortefeuilleRBC.BusinessServices
          return success;
       }
 
-      public StockDescription GetFirst(Func<StockDescription, bool> where)
+      public StockDescription GetSingle(Func<StockDescription, bool> where)
       {
-         return unitOfWork.StockDescriptionRepository.GetFirst(where);
+         return unitOfWork.StockDescriptionRepository.GetSingle(where);
       }
 
       public IEnumerable<Models.StockDescription> GetMany(Func<StockDescription, bool> where)

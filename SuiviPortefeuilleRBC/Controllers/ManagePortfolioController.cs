@@ -37,10 +37,14 @@ namespace SuiviPortefeuilleRBC.Controllers
       {
          UpdateStockDescription();
          ManagePortfolioViewModel viewModel = new ManagePortfolioViewModel();
-         viewModel.PortfolioIds = (List<int>)portfolioServices.GetIds();
-         if(viewModel.PortfolioIds.Count > 0)
+         viewModel.Portfolios = new List<SelectListItem>();
+         foreach(var ptf in portfolioServices.GetPortfoliosForUser(User.Identity.Name))
          {
-            viewModel.CurrentPortfolioId = viewModel.PortfolioIds[0];
+            viewModel.Portfolios.Add(new SelectListItem() { Text = ptf.Name, Value = ptf.PortfolioId.ToString() });
+         }
+         if(viewModel.Portfolios.Count > 0)
+         {
+            viewModel.CurrentPortfolioId = int.Parse(viewModel.Portfolios[0].Value);
          }
          return View(viewModel);
       }
@@ -50,6 +54,7 @@ namespace SuiviPortefeuilleRBC.Controllers
       {
          //Voir pour passer le modele au complet 
          var stocks = stockServices.GetStockByPortfolioId(currentPortfolioId);
+         stocks = stocks.OrderBy(s => s.Code);
          return PartialView("StockListPartialView", stocks);
       }
 
@@ -67,11 +72,11 @@ namespace SuiviPortefeuilleRBC.Controllers
       {
          if(ModelState.IsValid)
          {
-            var existingStock = stockServices.GetFirst(s => s.Code == operation.Code && s.PortfolioId == operation.PortfolioId);
+            var existingStock = stockServices.GetSingle(s => s.Code == operation.Code && s.PortfolioId == operation.PortfolioId);
 
             if(existingStock == null)
             {
-               var existingDescription = stockDescriptionServices.GetFirst(s => s.Code == operation.Code);
+               var existingDescription = stockDescriptionServices.GetSingle(s => s.Code == operation.Code);
                Stock stock = null;
                if(existingDescription == null)
                {

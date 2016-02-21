@@ -43,6 +43,7 @@ namespace SuiviPortefeuilleRBC.BusinessServices
 
       public int CreateOperation(Operation operation)
       {
+         operation.Amount = operation.NumberOfShares * operation.Price + operation.Fees;
          unitOfWork.OperationRepository.Insert(operation);
          unitOfWork.Save();
          return operation.OperationId;
@@ -63,9 +64,10 @@ namespace SuiviPortefeuilleRBC.BusinessServices
             //   stock.PerformancePercent = newStock.PerformancePercent;
             //   stock.UnitaryPrice = newStock.UnitaryPrice;
             //   unitOfWork.StockRepository.Update(stock);
+            newOperation.Amount = newOperation.NumberOfShares * newOperation.Price + newOperation.Fees;
             unitOfWork.OperationRepository.Update(newOperation);
-               unitOfWork.Save();
-               success = true;
+            unitOfWork.Save();
+            success = true;
             //}
          }
          return success;

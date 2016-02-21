@@ -17,5 +17,7 @@ namespace SuiviPortefeuilleRBC.Models
       public double Liquidity { get; set; }
       public List<Stock> Stocks { get; set; }
       public List<Operation> Operations { get; set; }
+      [Required]
+      public string UserName { get; set; }
    }
 }

@@ -37,6 +37,7 @@ namespace SuiviPortefeuilleRBC
 
          bundles.Add(new ScriptBundle("~/bundles/signalr").Include(
             "~/Scripts/jquery.signalR-{version}.js",
+            "~/Scripts/SuiviPortefeuilleRBC/ManagePortfolio.js",
             "~/signalr/hubs"));
       }
    }

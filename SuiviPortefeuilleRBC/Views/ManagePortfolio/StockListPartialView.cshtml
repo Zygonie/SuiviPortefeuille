@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<SuiviPortefeuilleRBC.Models.Stock>
 
-<table class="table">
+<table id="tableStocks" class="table">
     <tr>
         <th/>
         <th />
@@ -17,7 +17,7 @@
     @foreach(var item in Model)
     {
         <tr id="@item.Code.Replace(".","")">
-            <td>
+            <td class="buySellBtn">
                 <button class="btn btn-xs btn-success" data-toggle="modal" data-target="#newOperation"
                         value="buysell" data-url="@Url.Action("BuySellStock", "ManagePortfolio",
                         new
@@ -28,7 +28,7 @@
                     Buy
                 </button>
             </td>
-            <td>
+            <td class="buySellBtn">
                 <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#newOperation"
                         value="buysell" data-url="@Url.Action("BuySellStock", "ManagePortfolio",
                         new
@@ -39,7 +39,7 @@
                     Sell
                 </button>
             </td>
-            <td>@Html.DisplayFor(modelItem => item.Description.Name)</td>
+            <td class="boldName">@Html.DisplayFor(modelItem => item.Description.Name)</td>
             <td>@Html.DisplayFor(modelItem => item.Description.Code)</td>
             <td>@Html.DisplayFor(modelItem => item.NumberOfShares)</td>
             <td>@Html.DisplayFor(modelItem => item.UnitaryPrice)</td>

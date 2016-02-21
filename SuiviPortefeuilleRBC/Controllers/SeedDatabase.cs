@@ -34,67 +34,83 @@ namespace SuiviPortefeuilleRBC.Controllers
          {
             #region Add user
 
-            if(!(context.Users.Any(u => u.UserName == "guillaume.androz@gmail.com")))
+            if(!(context.Users.Any(u => u.UserName == "test@gmail.com")))
             {
                var userStore = new UserStore<ApplicationUser>(context);
                var userManager = new UserManager<ApplicationUser>(userStore);
-               var userToInsert = new ApplicationUser { UserName = "guillaume.androz@gmail.com" };
-               userManager.Create(userToInsert, "testGitIgnore");
+               var userToInsert = new ApplicationUser { UserName = "test@gmail.com" };
+               userManager.Create(userToInsert, "1234GA");
             }
-
+            
             #endregion
 
             #region Add portfolio
 
-            context.Portfolios.AddOrUpdate(p => p.Name,
-               new Portfolio
+            Portfolio ptf = new Portfolio
                {
-                  Name = "MargeRBC",
-                  TargetValue = 50000
-               });
+                  Name = "Marge RBC",
+                  TargetValue = 50000,
+                  UserName = "test@gmail.com"
+               };
+            Portfolio ptf2 = new Portfolio
+            {
+               Name = "CELI RBC",
+               TargetValue = 50000,
+               UserName = "test@gmail.com"
+            };
+            Portfolio ptf3 = new Portfolio
+            {
+               Name = "REER RBC",
+               TargetValue = 50000,
+               UserName = "test@gmail.com"
+            };
+            context.Portfolios.AddOrUpdate(p=>p.Name, ptf);
+            context.Portfolios.AddOrUpdate(p => p.Name, ptf2);
+            context.Portfolios.AddOrUpdate(p => p.Name, ptf3);
+            context.SaveChanges();
 
             #endregion
 
             #region Add descriptions
             List<StockDescription> descriptions = new List<StockDescription>
             {
-               new StockDescription { Code = "Marge", Name = "Marge", ExDividendDate = DateTime.Now},
-               new StockDescription { Code = "EMA.TO", Name = "EMERA INCORPORATED", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "RY.TO", Name = "ROYAL BANK OF CANADA", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "POT.TO", Name = "POTASH CORP OF SASK INC", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "BMO.TO", Name = "BANK OF MONTREAL", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "TD.TO", Name = "TORONTO-DOMINION BANK", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "BNS.TO", Name = "BANK OF NOVA SCOTIA", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "AGF-B.TO", Name = "AGF MANAGEMENT LTD. CL.B NV", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "TCL-A.TO", Name = "TRANSCONTINENTAL INC. CL A SV", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "ACD.TO", Name = "ACCORD FINANCIAL", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "FTS.TO", Name = "FORTIS INC", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "MIC.TO", Name = "GENWORTH MI CANADA INC.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "CTY.TO", Name = "CALIAN TECHNOLOGIES LTD.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "CU.TO", Name = "CANADIAN UTILITIES LTD. CL.A", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "TRI.TO", Name = "THOMSON REUTERS CORPORATION", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "FTT.TO", Name = "FINNING INTL", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "RCI-B.TO", Name = "ROGERS COMMUNICATIONS INC. CL.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "BCE.TO", Name = "BCE INC.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "CPX.TO", Name = "CAPITAL POWER CORPORATION", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "PWF.TO", Name = "POWER FINANCIAL CORP.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "LB.TO", Name = "LAURENTIAN BANK", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "CM.TO", Name = "CANADIAN IMPERIAL BANK OF COMME", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "POW.TO", Name = "POWER CORPORATION OF CANADA SV", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "SXP.TO", Name = "SUPREMEX INC.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "TRP.TO", Name = "TRANSCANADA CORP.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "ESI.TO", Name = "ENSIGN ENERGY SERVICES INC.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "SDY.TO", Name = "STRAD ENERGY SERVICES LTD", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "NA.TO", Name = "NATIONAL BANK OF CANADA", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "CPG.TO", Name = "CRESCENT POINT ENERGY CORP.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "FC.TO", Name = "FIRM CAPITAL MORTGAGE INV. CORP", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "AI.TO", Name = "ATRIUM MORTGAGE INVESTMENT CORP", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "AFN.TO", Name = "AG GROWTH INTERNATIONAL INC.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "ENF.TO", Name = "ENBRIDGE INCOME FUND HOLDINGS I", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "BDT.TO", Name = "BIRD CONSTR INC", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "NPI.TO", Name = "NORTHLAND POWER INC.", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "CJR-B.TO", Name = "CORUS ENTERTAINMENT INC. CL.B", ExDividendDate = DateTime.Now },
-               new StockDescription { Code = "AAPL", Name = "APPLE", ExDividendDate = DateTime.Now }
+               new StockDescription { Code = "Marge", Name = "Marge", LastTimeUpdated = DateTime.Now},
+               new StockDescription { Code = "EMA.TO", Name = "EMERA INCORPORATED", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "RY.TO", Name = "ROYAL BANK OF CANADA", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "POT.TO", Name = "POTASH CORP OF SASK INC", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "BMO.TO", Name = "BANK OF MONTREAL", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "TD.TO", Name = "TORONTO-DOMINION BANK", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "BNS.TO", Name = "BANK OF NOVA SCOTIA", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "AGF-B.TO", Name = "AGF MANAGEMENT LTD. CL.B NV", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "TCL-A.TO", Name = "TRANSCONTINENTAL INC. CL A SV", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "ACD.TO", Name = "ACCORD FINANCIAL", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "FTS.TO", Name = "FORTIS INC", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "MIC.TO", Name = "GENWORTH MI CANADA INC.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "CTY.TO", Name = "CALIAN TECHNOLOGIES LTD.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "CU.TO", Name = "CANADIAN UTILITIES LTD. CL.A", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "TRI.TO", Name = "THOMSON REUTERS CORPORATION", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "FTT.TO", Name = "FINNING INTL", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "RCI-B.TO", Name = "ROGERS COMMUNICATIONS INC. CL.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "BCE.TO", Name = "BCE INC.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "CPX.TO", Name = "CAPITAL POWER CORPORATION", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "PWF.TO", Name = "POWER FINANCIAL CORP.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "LB.TO", Name = "LAURENTIAN BANK", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "CM.TO", Name = "CANADIAN IMPERIAL BANK OF COMME", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "POW.TO", Name = "POWER CORPORATION OF CANADA SV", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "SXP.TO", Name = "SUPREMEX INC.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "TRP.TO", Name = "TRANSCANADA CORP.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "ESI.TO", Name = "ENSIGN ENERGY SERVICES INC.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "SDY.TO", Name = "STRAD ENERGY SERVICES LTD", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "NA.TO", Name = "NATIONAL BANK OF CANADA", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "CPG.TO", Name = "CRESCENT POINT ENERGY CORP.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "FC.TO", Name = "FIRM CAPITAL MORTGAGE INV. CORP", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "AI.TO", Name = "ATRIUM MORTGAGE INVESTMENT CORP", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "AFN.TO", Name = "AG GROWTH INTERNATIONAL INC.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "ENF.TO", Name = "ENBRIDGE INCOME FUND HOLDINGS I", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "BDT.TO", Name = "BIRD CONSTR INC", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "NPI.TO", Name = "NORTHLAND POWER INC.", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "CJR-B.TO", Name = "CORUS ENTERTAINMENT INC. CL.B", LastTimeUpdated = DateTime.Now },
+               new StockDescription { Code = "AAPL", Name = "APPLE", LastTimeUpdated = DateTime.Now }
             };
 
             descriptions.ForEach(s => context.StockDescriptions.AddOrUpdate(p => p.Code, s));
@@ -107,7 +123,6 @@ namespace SuiviPortefeuilleRBC.Controllers
             var descriptionRY = context.StockDescriptions.First(p => p.Code == "RY.TO");
             var descriptionNA = context.StockDescriptions.First(p => p.Code == "NA.TO");
             var descriptionAAPL = context.StockDescriptions.First(p => p.Code == "AAPL");
-            var ptf = context.Portfolios.First(p => p.Name == "MargeRBC");
 
             //Add stocks
             var stockRY = new Stock();
@@ -131,7 +146,7 @@ namespace SuiviPortefeuilleRBC.Controllers
             stockAAPL.InvestedValue = 500;
             stockAAPL.UnitaryPrice = 50;
 
-            context.Stocks.AddOrUpdate(p => p.StockId, new Stock[] { stockRY, stockNA, stockAAPL });
+            context.Stocks.AddOrUpdate(p => p.Code, new Stock[] { stockRY, stockNA, stockAAPL });
 
             context.SaveChanges();
 

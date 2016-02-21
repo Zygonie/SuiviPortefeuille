@@ -14,7 +14,7 @@ namespace SuiviPortefeuilleRBC.BusinessServices
       string CreateStockDescription(StockDescription stockDescription);
       bool UpdateStockDescription(StockDescription stockDescription);
       bool DeleteStockDescription(int stockDescriptionId);
-      StockDescription GetFirst(Func<StockDescription, bool> where);
+      StockDescription GetSingle(Func<StockDescription, bool> where);
       IEnumerable<Models.StockDescription> GetMany(Func<StockDescription, bool> where);
    }
 }

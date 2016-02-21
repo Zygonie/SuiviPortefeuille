@@ -34,6 +34,7 @@ namespace SuiviPortefeuilleRBC.Migrations
                         TargetValue = c.Double(nullable: false),
                         Value = c.Double(nullable: false),
                         Liquidity = c.Double(nullable: false),
+                        UserName = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.PortfolioId);
             
@@ -83,6 +84,7 @@ namespace SuiviPortefeuilleRBC.Migrations
                         Amount = c.Double(nullable: false),
                         NumberOfSharesTarget = c.Int(nullable: false),
                         AmountTarget = c.Double(nullable: false),
+                        LastTimeUpdated = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Code);
             
@@ -108,6 +110,28 @@ namespace SuiviPortefeuilleRBC.Migrations
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId)
                 .Index(t => t.RoleId);
+            
+            CreateTable(
+                "dbo.SignalRConnections",
+                c => new
+                    {
+                        SignalRConnectionId = c.String(nullable: false, maxLength: 128),
+                        UserAgent = c.String(),
+                        Connected = c.Boolean(nullable: false),
+                        PortfolioId = c.Int(nullable: false),
+                        SignalRUser_UserName = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.SignalRConnectionId)
+                .ForeignKey("dbo.SignalRUsers", t => t.SignalRUser_UserName)
+                .Index(t => t.SignalRUser_UserName);
+            
+            CreateTable(
+                "dbo.SignalRUsers",
+                c => new
+                    {
+                        UserName = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => t.UserName);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -161,6 +185,7 @@ namespace SuiviPortefeuilleRBC.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.SignalRConnections", "SignalRUser_UserName", "dbo.SignalRUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.Stocks", "PortfolioId", "dbo.Portfolios");
             DropForeignKey("dbo.Stocks", "Code", "dbo.StockDescriptions");
@@ -168,6 +193,7 @@ namespace SuiviPortefeuilleRBC.Migrations
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.SignalRConnections", new[] { "SignalRUser_UserName" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
@@ -177,6 +203,8 @@ namespace SuiviPortefeuilleRBC.Migrations
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
+            DropTable("dbo.SignalRUsers");
+            DropTable("dbo.SignalRConnections");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.StockDescriptions");

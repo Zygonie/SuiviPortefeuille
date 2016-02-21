@@ -13,7 +13,7 @@ namespace SuiviPortefeuilleRBC.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201601160312460_Initial"; }
+            get { return "201602122026199_Initial"; }
         }
         
         string IMigrationMetadata.Source

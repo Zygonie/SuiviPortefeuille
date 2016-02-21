@@ -82,21 +82,119 @@ namespace SuiviPortefeuilleRBC.Models
       [DisplayName("Cash to invest (adjusted)")]
       public double AmountTarget { get; set; }
 
+      [Required]
+      public DateTime? LastTimeUpdated { get; set; }
+
+      [NotMapped]
+      public bool HasChanged { get; set; }
+
       public void FillInfos(DetailedQuoteQueryResultModel infos)
       {
-         LastPrice = double.Parse(infos.LastTradePriceOnly);
-         ChangePercent = double.Parse(infos.ChangeinPercent.Replace("%", "")) / 100; //On affiche en pourcentage (format P2)
-         DividendYield = double.Parse(infos.DividendYield) / 100;         
-         PriceEarningRatio = double.Parse(infos.PERatio);
-         DividendPerShare = double.Parse(infos.DividendShare);
-         EarningsPerShare = double.Parse(infos.EarningsShare);
-         EpsEstimateCurrentYear = double.Parse(infos.EPSEstimateCurrentYear);
-         PriceToBook = double.Parse(infos.PriceBook);
-         ExDividendDate = DateTime.Parse(infos.ExDividendDate);
-         BookToValuePerShare = double.Parse(infos.BookValue);
-         Payout = DividendPerShare / EarningsPerShare;
-         GrahamPrice = Math.Sqrt(22.5 * EarningsPerShare * BookToValuePerShare);
-         GrahamSpread = (GrahamPrice - LastPrice) / GrahamPrice;
+         double result;
+         //LastPrice
+         double oldPrice = this.LastPrice;
+         if(double.TryParse(infos.LastTradePriceOnly, out result)) //On affiche en pourcentage (format P2)
+         {
+            LastPrice = result;
+            HasChanged = Math.Abs(oldPrice - LastPrice) < 1 - 6;
+         }
+         else
+         {
+            LastPrice = 0.0;
+         }
+         //ChangePercent
+         if(double.TryParse(infos.ChangeinPercent.Replace("%", ""), out result)) //On affiche en pourcentage (format P2)
+         {
+            ChangePercent = result / 100;
+         }
+         else
+         {
+            ChangePercent = 0.0;
+         }
+
+         if((DateTime.Now - (DateTime)LastTimeUpdated).TotalDays > 5)
+         {
+            HasChanged = true;
+            LastTimeUpdated = DateTime.Now;
+
+            //DividendYield
+            if(double.TryParse(infos.DividendYield, out result))
+            {
+               DividendYield = result / 100;
+            }
+            else
+            {
+               DividendYield = 0.0;
+            }
+            //PriceEarningRatio
+            if(double.TryParse(infos.PERatio, out result))
+            {
+               PriceEarningRatio = result;
+            }
+            else
+            {
+               PriceEarningRatio = 0.0;
+            }
+            //DividendPerShare
+            if(double.TryParse(infos.DividendShare, out result))
+            {
+               DividendPerShare = result;
+            }
+            else
+            {
+               DividendPerShare = 0.0;
+            }
+            //EarningsPerShare
+            if(double.TryParse(infos.EarningsShare, out result))
+            {
+               EarningsPerShare = result;
+            }
+            else
+            {
+               EarningsPerShare = 0.0;
+            }
+            //EpsEstimateCurrentYear
+            if(double.TryParse(infos.EPSEstimateCurrentYear, out result))
+            {
+               EpsEstimateCurrentYear = result;
+            }
+            else
+            {
+               EpsEstimateCurrentYear = 0.0;
+            }
+            //PriceToBook
+            if(double.TryParse(infos.PriceBook, out result))
+            {
+               PriceToBook = result;
+            }
+            else
+            {
+               PriceToBook = 0.0;
+            }
+            //ExDividendDate
+            DateTime resultDate;
+            if(DateTime.TryParse(infos.ExDividendDate, out resultDate))
+            {
+               ExDividendDate = resultDate;
+            }
+            else
+            {
+               ExDividendDate = DateTime.MinValue;
+            }
+            //BookToValuePerShare
+            if(double.TryParse(infos.BookValue, out result))
+            {
+               BookToValuePerShare = result;
+            }
+            else
+            {
+               BookToValuePerShare = 0.0;
+            }
+
+            Payout = DividendPerShare / EarningsPerShare;
+            GrahamPrice = Math.Sqrt(22.5 * EarningsPerShare * BookToValuePerShare);
+            GrahamSpread = (GrahamPrice - LastPrice) / GrahamPrice;
+         }
       }
 
       public void FillInfos(SimpleQuoteQueryResultModel infos)

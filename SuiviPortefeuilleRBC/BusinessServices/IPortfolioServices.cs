@@ -9,7 +9,7 @@ namespace SuiviPortefeuilleRBC.BusinessServices
 {
    public interface IPortfolioServices
    {
-      IEnumerable<int> GetIds();
+      IEnumerable<Portfolio> GetPortfoliosForUser(string username);
       Portfolio GetPortfolioById(int portfolioId);
       IEnumerable<Portfolio> GetAllPortfolios();
       int CreatePortfolio(Portfolio portfolio);
